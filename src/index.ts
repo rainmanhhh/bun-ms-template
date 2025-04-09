@@ -1,15 +1,20 @@
+import * as process from 'node:process'
 import modules from './generated/modules'
+import { logger } from './logger.ts'
 
 async function main() {
-  console.log('modules: ', JSON.stringify(modules, null, 2))
-  const server = Bun.serve({
-    port: 3000,
-    fetch(_req) {
-      return new Response('Hello from Vite + Bun!')
-    },
-  })
-
-  console.log(`Server is running on http://localhost:${server.port}`)
+  for (const [moduleName, module] of Object.entries(modules)) {
+    const moduleDefaultExport = module.default
+    if (typeof moduleDefaultExport === 'function') {
+      try {
+        await moduleDefaultExport()
+        logger.info('module [%s] started', moduleName)
+      } catch (e) {
+        logger.error('start module [%s] failed', moduleName, e)
+        process.exit(1)
+      }
+    }
+  }
 }
 
 main().then()

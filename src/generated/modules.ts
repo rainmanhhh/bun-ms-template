@@ -1,9 +1,7 @@
-import * as a from '../modules/a'
-import * as b from '../modules/b'
-import * as t_c from '../modules/t/c'
+import * as controller_foo from '../modules/controller/foo'
+import * as server from '../modules/server'
 
 export default {
-  a,
-  b,
-  t_c
+  controller_foo,
+  server
 }
