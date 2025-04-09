@@ -1,0 +1,21 @@
+{
+  "name": "vite-bun-server",
+  "version": "0.0.0",
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.11.0",
+    "@types/bun": "^1.2.8",
+    "eslint": "^9.24.0",
+    "eslint-plugin-format": "^1.0.1",
+    "glob": "^11.0.1",
+    "typescript": "~5.7.2"
+  },
+  "private": true,
+  "scripts": {
+    "dev": "bun prebuild.ts && bun src/index.ts",
+    "build": "bun prebuild.ts && bun build ./src/index.ts --outdir ./dist --target bun",
+    "check": "tsc --noEmit",
+    "lint": "eslint",
+    "start": "bun dist/index.js"
+  },
+  "type": "module"
+}
