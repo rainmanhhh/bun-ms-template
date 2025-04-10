@@ -1,7 +1,7 @@
 import { writeFileSync } from 'node:fs'
 import { glob } from 'glob'
 
-function loadModules() {
+function parseModules() {
 // 1. 扫描模块路径
   const files = glob.sync('src/modules/**/*.ts')
     .sort((a, b) => a.localeCompare(b))
@@ -31,4 +31,4 @@ export default {
   writeFileSync('src/generated/modules.ts', output)
 }
 
-loadModules()
+parseModules()

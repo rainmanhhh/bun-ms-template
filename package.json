@@ -12,8 +12,8 @@
   },
   "private": true,
   "scripts": {
-    "dev": "bun prebuild.ts && bun src/index.ts",
-    "build": "bun prebuild.ts && bun build ./src/index.ts --outdir ./dist --target bun",
+    "dev": "bun prebuild/parseModules.ts && bun src/index.ts",
+    "build": "bun prebuild/parseModules.ts && bun build ./src/index.ts --outdir ./dist --target bun",
     "check": "tsc --noEmit",
     "lint": "eslint",
     "start": "bun dist/index.js",
