@@ -1,13 +1,4 @@
-import type { LoggerOptions } from 'pino'
 import pino from 'pino'
+import { appConfig } from './appConfig.ts'
 
-export const loggerConfig: LoggerOptions = {
-  transport: {
-    target: 'pino-pretty',
-    options: {
-      colorize: true
-    }
-  }
-}
-
-export const logger = pino(loggerConfig)
+export const logger = pino(appConfig.log)
