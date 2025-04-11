@@ -3,25 +3,30 @@
   "version": "0.0.0",
   "devDependencies": {
     "@antfu/eslint-config": "^4.11.0",
+    "@openapi-generator-plus/typescript-express-passport-server-generator": "^2.13.0",
     "@types/bun": "^1.2.8",
     "eslint": "^9.24.0",
     "eslint-plugin-format": "^1.0.1",
     "glob": "^11.0.1",
+    "openapi-generator-plus": "^2.20.0",
+    "rimraf": "^6.0.1",
     "typescript": "~5.7.2",
     "typescript-json-schema": "^0.65.1"
   },
   "private": true,
   "scripts": {
-    "dev": "bun prebuild/parseModules.ts && bun src/index.ts",
-    "build": "bun prebuild/parseModules.ts && bun build ./src/index.ts --outdir ./dist --target bun",
+    "dev": "bun --bun prebuild/parseModules.ts && bun --bun src/index.ts",
+    "build": "bun --bun prebuild/parseModules.ts && bun build ./src/index.ts --outdir ./dist --target bun",
     "check": "tsc --noEmit",
     "lint": "eslint",
-    "start": "bun dist/index.js",
-    "configSchema": "typescript-json-schema tsconfig.json -i src/IAppConfig.d.ts -o config/schema.json IAppConfig"
+    "start": "bun --bun dist/index.js",
+    "configSchema": "bun --bun typescript-json-schema tsconfig.json -i src/IAppConfig.d.ts -o config/schema.json IAppConfig",
+    "parseApi": "bun --bun rimraf ./src/generated/server && bun --bun openapi-generator-plus -c ./openapi/plus.yml"
   },
   "type": "module",
   "dependencies": {
-    "fastify": "^5.2.2",
+    "express": "^5.1.0",
+    "passport": "^0.7.0",
     "pino": "^9.6.0",
     "pino-pretty": "^13.0.0"
   }

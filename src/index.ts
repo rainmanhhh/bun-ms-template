@@ -2,6 +2,7 @@ import * as process from 'node:process'
 import modules from './generated/modules'
 import { logger } from './logger.ts'
 
+// todo fastify-openapi-glue 根据api生成源码
 async function main() {
   for (const [moduleName, module] of Object.entries(modules as Record<string, any>)) {
     const moduleDefaultExport = module.default

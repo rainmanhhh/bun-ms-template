@@ -1,0 +1,43 @@
+openapi: 3.0.3
+info:
+  title: koo-oo
+  description: koo-oo
+  version: 1.0.0
+  contact:
+    name: hnsfy
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  /mySeq:
+    get:
+      summary: My Sequence
+      operationId: get-mySeq
+      description: 生成一个序列号
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Seq'
+      tags:
+        - KooOo
+components:
+  schemas:
+    Seq:
+      title: Seq
+      type: object
+      description: 'get-mySeq返回报文（序列号） '
+      properties:
+        value:
+          type: integer
+          format: int64
+        create_time:
+          type: string
+          description: 创建时间
+          format: date-time
+      required:
+        - value
+        - create_time
+tags:
+  - name: KooOo

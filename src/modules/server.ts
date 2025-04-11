@@ -1,32 +1,23 @@
-import { fastify } from 'fastify'
+import type { ApiImplementation } from '../generated/server/types'
+import express from 'express'
 import { appConfig } from '../appConfig.ts'
+import setupRoutes from '../generated/server'
+import { logger } from '../logger.ts'
 
-const SERVER_PORT = 3000
+export const apis: Partial<ApiImplementation> = {}
 
-export const server = fastify({
-  logger: appConfig.log,
-  disableRequestLogging: true,
-})
+export const server = express()
 
-server.addHook('onResponse', (req, reply, done) => {
-  type LogLevel = keyof typeof reply.log
-  let lvl: LogLevel
-  if (reply.statusCode >= 200 && reply.statusCode < 300) {
-    lvl = 'debug'
-  } else if (reply.statusCode >= 300 && reply.statusCode < 400) {
-    lvl = 'info'
-  } else if (reply.statusCode >= 400 && reply.statusCode < 500) {
-    lvl = 'warn'
-  } else if (reply.statusCode >= 500) {
-    lvl = 'error'
+server.use((err: Error | null, _req: express.Request, res: express.Response, next: express.NextFunction) => {
+  if (err) {
+    logger.error(err, 'Unhandled error')
+    res.status(500).json({ code: 500, message: err.message })
   } else {
-    lvl = 'info'
+    next()
   }
-  // todo error stack
-  reply.log[lvl]('[%s %s %d] cost: %sms', req.method, req.url, reply.statusCode, reply.elapsedTime.toFixed(0))
-  done()
 })
 
 export default async function () {
-  await server.listen({ port: SERVER_PORT })
+  setupRoutes(server, apis as ApiImplementation)
+  server.listen(appConfig.port)
 }
