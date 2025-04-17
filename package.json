@@ -15,14 +15,14 @@
   },
   "private": true,
   "scripts": {
-    "prebuild": "bun --bun prebuild/parseModules.ts",
-    "dev": "bun run prebuild && bun --bun src/index.ts",
-    "build": "bun run prebuild && bun build ./src/index.ts --outdir ./dist --target bun",
+    "generate:modules": "bun --bun prebuild/parseModules.ts",
+    "generate:configSchema": "bunx --bun typescript-json-schema tsconfig.json -i src/IAppConfig.d.ts -o config/schema.json IAppConfig",
+    "generate:api": "bunx --bun rimraf ./src/generated/server && bunx --bun openapi-generator-plus -c ./openapi/plus.yml",
+    "dev": "bun run generate:modules && bun --bun src/index.ts",
+    "build": "bun run generate:modules && bun build ./src/index.ts --outdir ./dist --target bun",
     "preview": "bun --bun dist/index.js",
     "check": "bunx --bun tsc",
-    "lint": "bunx --bun eslint",
-    "configSchema": "bunx --bun typescript-json-schema tsconfig.json -i src/IAppConfig.d.ts -o config/schema.json IAppConfig",
-    "parseApi": "bunx --bun rimraf ./src/generated/server && bunx --bun openapi-generator-plus -c ./openapi/plus.yml"
+    "lint": "bunx --bun eslint"
   },
   "type": "module",
   "dependencies": {

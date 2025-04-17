@@ -26,10 +26,10 @@ bun i
 
 在 `package.json` 中定义的核心开发指令：
 
-### `prebuild` 扫描解析模块文件
+### `generate:modules` 扫描解析模块文件
 解析`src/modules`目录下的文件，生成`src/generated/modules.ts`
 ```
-bun run prebuild
+bun run generate:modules
 ```
 
 ### `dev` 启动开发服务器
@@ -59,15 +59,15 @@ bun run check
 bun run lint
 ```
 
-### `configSchema` 更新config json schema
+### `generate:configSchema` 更新config json schema
 每次修改IAppConfig.d.ts后，执行此脚本，生成`config/schema.json`。
 `config`目录下的配置文件，可绑定该json schema以获得自动补全提示
 ```
-bun run configSchema
+bun run generate:configSchema
 ```
 
-### `parseApi` 更新api接口代码
+### `generate:api` 更新api接口代码
 每次修改openapi schema后，执行此脚本，从openapi生成typescript（输出路径为src/generated/server）
 ```
-bun run parseApi
+bun run generate:api
 ```
