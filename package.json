@@ -1,5 +1,5 @@
 {
-  "name": "vite-bun-server",
+  "name": "bun-server",
   "version": "0.0.0",
   "devDependencies": {
     "@antfu/eslint-config": "^4.11.0",
@@ -15,17 +15,19 @@
   },
   "private": true,
   "scripts": {
-    "dev": "bun --bun prebuild/parseModules.ts && bun --bun src/index.ts",
-    "build": "bun --bun prebuild/parseModules.ts && bun build ./src/index.ts --outdir ./dist --target bun",
-    "check": "tsc --noEmit",
-    "lint": "eslint",
-    "start": "bun --bun dist/index.js",
-    "configSchema": "bun --bun typescript-json-schema tsconfig.json -i src/IAppConfig.d.ts -o config/schema.json IAppConfig",
-    "parseApi": "bun --bun rimraf ./src/generated/server && bun --bun openapi-generator-plus -c ./openapi/plus.yml"
+    "prebuild": "bun --bun prebuild/parseModules.ts",
+    "dev": "bun run prebuild && bun --bun src/index.ts",
+    "build": "bun run prebuild && bun build ./src/index.ts --outdir ./dist --target bun",
+    "preview": "bun --bun dist/index.js",
+    "check": "bunx --bun tsc",
+    "lint": "bunx --bun eslint",
+    "configSchema": "bunx --bun typescript-json-schema tsconfig.json -i src/IAppConfig.d.ts -o config/schema.json IAppConfig",
+    "parseApi": "bunx --bun rimraf ./src/generated/server && bunx --bun openapi-generator-plus -c ./openapi/plus.yml"
   },
   "type": "module",
   "dependencies": {
     "express": "^5.1.0",
+    "p-defer": "^4.0.1",
     "passport": "^0.7.0",
     "pino": "^9.6.0",
     "pino-pretty": "^13.0.0"

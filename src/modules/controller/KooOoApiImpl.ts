@@ -1,5 +1,6 @@
 import type { GetMySeqResponse, KooOoApi } from '../../generated/server/api/kooOo/types'
-import { apis } from '../server'
+
+import { routes } from '../server/routes'
 
 export class KooOoApiImpl implements KooOoApi {
   async getMySeq() {
@@ -12,4 +13,4 @@ export class KooOoApiImpl implements KooOoApi {
     } satisfies GetMySeqResponse
   }
 }
-apis.kooOo = new KooOoApiImpl()
+routes.kooOo = new KooOoApiImpl()

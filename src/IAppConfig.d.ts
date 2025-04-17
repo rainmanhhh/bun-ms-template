@@ -1,6 +1,9 @@
 import type { LoggerOptions } from 'pino'
 
 export interface IAppConfig {
-  port: number
+  server: {
+    port: number
+    failOnUnknownProperties?: boolean
+  }
   log: LoggerOptions
 }

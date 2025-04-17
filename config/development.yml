@@ -1,4 +1,6 @@
-port: 5000
+$schema: ./schema.json
+server:
+  port: 5000
 log:
   level: debug
   transport:
