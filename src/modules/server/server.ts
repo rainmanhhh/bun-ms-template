@@ -1,5 +1,5 @@
 import express from 'express'
-import { appConfig } from '../../appConfig.ts'
+import { appConfig } from '../../config/appConfig'
 import { routesDefer } from './routes.ts'
 
 export const server = express()

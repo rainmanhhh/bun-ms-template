@@ -16,7 +16,7 @@
   "private": true,
   "scripts": {
     "generate:modules": "bun --bun prebuild/parseModules.ts",
-    "generate:configSchema": "bunx --bun typescript-json-schema tsconfig.json -i src/IAppConfig.d.ts -o config/schema.json IAppConfig",
+    "generate:configSchema": "bunx --bun typescript-json-schema tsconfig.json -i src/config/IAppConfig.d.ts -o config/schema.json IAppConfig",
     "generate:api": "bunx --bun rimraf ./src/generated/server && bunx --bun openapi-generator-plus -c ./openapi/plus.yml",
     "dev": "bun run generate:modules && bun --bun src/index.ts",
     "build": "bun run generate:modules && bun build ./src/index.ts --outdir ./dist --target bun",

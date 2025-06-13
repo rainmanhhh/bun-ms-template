@@ -1,7 +1,7 @@
 import type { DeferredPromise } from 'p-defer'
 import type { ApiImplementation } from '../../generated/server/types.ts'
 import defer from 'p-defer'
-import { appConfig } from '../../appConfig.ts'
+import { appConfig } from '../../config/appConfig'
 import setupRoutes from '../../generated/server'
 import { logger } from '../../logger.ts'
 import { server } from './server.ts'
