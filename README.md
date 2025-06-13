@@ -8,6 +8,7 @@
 ## 目录
 1. [环境准备](#环境准备)
 2. [项目脚本](#项目脚本)
+3. [配置文件](#配置文件)
 
 ---
 
@@ -33,13 +34,11 @@ bun run generate:modules
 ```
 
 ### `dev` 启动开发服务器
-每次启动服务前，会先执行`prebuild`
 ```
 bun run dev
 ```
 
 ### `build` 编译打包
-每次编译打包前，会先执行`prebuild`
 ```
 bun run build
 ```
@@ -60,14 +59,27 @@ bun run lint
 ```
 
 ### `generate:configSchema` 更新config json schema
-每次修改IAppConfig.d.ts后，执行此脚本，生成`config/schema.json`。
-`config`目录下的配置文件，可绑定该json schema以获得自动补全提示
+执行此脚本，将生成`config/schema.json`。
+`config`目录下的配置文件，可绑定该json schema以获得自动补全提示，详情见[配置文件](#配置文件)
 ```
 bun run generate:configSchema
 ```
 
 ### `generate:api` 更新api接口代码
-每次修改openapi schema后，执行此脚本，从openapi生成typescript（输出路径为src/generated/server）
+每次修改openapi schema后，执行此脚本，从openapi生成typescript接口（输出路径为src/generated/server）
 ```
 bun run generate:api
 ```
+
+## 配置文件
+- `src/config/appConfig.ts`用于加载配置文件并导出一个`appConfig`对象
+- 配置项类型定义在`src/config/IAppConfig.d.ts`中，每次修改此文件后，应重新执行`generate:configSchema`脚本，生成新的`config/schema.json`
+- 配置文件为yml格式，文件名为"NODE_ENV.yml"，例如"development.yml""test.yml""production.yml"，第一行固定为`$schema: ./schema.json`，以绑定json schema
+- NODE_ENV未指定则默认为development
+
+## 编写业务代码
+**注意**：在`src/modules`目录下新增、删除、重命名任意文件后，应重新执行`generate:modules`
+- 在openapi schema中定义接口
+- 根据openapi schema生成typescript接口文件，输出文件为`src/generated/server/api/XXX/types.ts`，类型为XXXApi
+- 在`src/modules/controller`目录下编写实现类（XXXApiImpl），注意：每个实现类文件尾部应创建实例并赋值给`routes`对象的对应字段
+
