@@ -81,5 +81,5 @@ bun run generate:api
 **注意**：在`src/modules`目录下新增、删除、重命名任意文件后，应重新执行`generate:modules`
 - 在openapi schema中定义接口
 - 根据openapi schema生成typescript接口文件，输出文件为`src/generated/server/api/XXX/types.ts`，类型为XXXApi
-- 在`src/modules/controller`目录下编写实现类（XXXApiImpl），注意：每个实现类文件尾部应创建实例并赋值给`routes`对象的对应字段
+- 在`src/modules/controller`目录下编写实现类（XXXApiImpl），注意：每个实现类文件尾部应创建实例并赋值给`routes`对象的对应字段，例如`routes.kooOo = new KooOoApiImpl()`
 
