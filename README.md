@@ -83,3 +83,6 @@ bun run generate:api
 - 根据openapi schema生成typescript接口文件，输出文件为`src/generated/server/api/XXX/types.ts`，类型为XXXApi
 - 在`src/modules/controller`目录下编写实现类（XXXApiImpl），注意：每个实现类文件尾部应创建实例并赋值给`routes`对象的对应字段，例如`routes.kooOo = new KooOoApiImpl()`
 
+## 模块（module）加载机制说明
+- `src/modules`目录（包括子目录）下的每个文件会被视为一个模块，完整的模块名由目录和文件名拼接构成，例如`src/modules/controller/user/index.ts`的模块名为`controller_user_index`
+- 模块文件的默认导出对象（default export）如果是函数，则会在自动加载时被执行
