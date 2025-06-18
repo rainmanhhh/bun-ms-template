@@ -1,6 +1,9 @@
 $schema: ./schema.json
+name: vite-bun-demo
 server:
   port: 5000
+eureka:
+  host: 192.168.20.26
 log:
   level: debug
   transport:
