@@ -42,19 +42,21 @@ export const eurekaClient = eureka
   ? initEurekaClient(eureka)
   : null
 
-export default async function () {
-  const d = defer<void>()
-  eurekaClient?.start((err, _rest) => {
-    if (err)
-      d.reject(err)
-    else
-      d.resolve(logger.info('eureka client started'))
-  })
-  await d.promise
-  server.get('/actuator/info', (_req, res) => {
-    res.json({})
-  })
-  server.get('/actuator/health', (_req, res) => {
-    res.json({ status: 'UP' })
-  })
+export default function () {
+  if (eurekaClient) {
+    server.get('/actuator/info', (_req, res) => {
+      res.json({})
+    })
+    server.get('/actuator/health', (_req, res) => {
+      res.json({ status: 'UP' })
+    })
+    const d = defer<void>()
+    eurekaClient.start((err, _rest) => {
+      if (err)
+        d.reject(err)
+      else
+        d.resolve(logger.info('eureka client started'))
+    })
+    return d.promise
+  }
 }
