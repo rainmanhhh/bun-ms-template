@@ -17,7 +17,7 @@ function initEurekaClient(e: Exclude<typeof eureka, undefined>) {
         '$': appConfig.server.port,
         '@enabled': true,
       },
-      vipAddress: ipAddr,
+      vipAddress: appConfig.name,
       dataCenterInfo: {
         '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
         'name': 'MyOwn',
