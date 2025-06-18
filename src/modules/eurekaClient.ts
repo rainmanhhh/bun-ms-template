@@ -3,6 +3,7 @@ import defer from 'p-defer'
 import { appConfig } from '../config/appConfig.ts'
 import { logger } from '../logger.ts'
 import { ipUtil } from '../util/ipUtil.ts'
+import { server } from './server/server.ts'
 
 const eureka = appConfig.eureka
 
@@ -25,6 +26,9 @@ function initEurekaClient(e: Exclude<typeof eureka, undefined>) {
         '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
         'name': 'MyOwn',
       },
+      homePageUrl: `http://${ipAddr}:${port}/`,
+      statusPageUrl: `http://${ipAddr}:${port}/actuator/info`,
+      healthCheckUrl: `http://${ipAddr}:${port}/actuator/health`,
     },
     eureka: {
       host: e.host,
@@ -38,7 +42,7 @@ export const eurekaClient = eureka
   ? initEurekaClient(eureka)
   : null
 
-export default function () {
+export default async function () {
   const d = defer<void>()
   eurekaClient?.start((err, _rest) => {
     if (err)
@@ -46,5 +50,11 @@ export default function () {
     else
       d.resolve(logger.info('eureka client started'))
   })
-  return d.promise
+  await d.promise
+  server.get('/actuator/info', (_req, res) => {
+    res.json({})
+  })
+  server.get('/actuator/health', (_req, res) => {
+    res.json({ status: 'UP' })
+  })
 }
