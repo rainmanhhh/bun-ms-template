@@ -21,7 +21,7 @@
     "generate:configSchema": "bunx --bun typescript-json-schema tsconfig.json -i src/config/IAppConfig.d.ts -o config/schema.json IAppConfig",
     "generate:api": "bunx --bun rimraf ./src/generated/server && bunx --bun openapi-generator-plus -c ./openapi/plus.yml",
     "dev": "bun run generate:modules && bun --bun src/index.ts",
-    "build": "bun run generate:modules && bun build ./src/index.ts --outdir ./dist --target bun",
+    "build": "bun run generate:modules && bun build --define import.meta.env.NODE_ENV='production' ./src/index.ts --outdir ./dist --target bun",
     "preview": "bun --bun dist/index.js",
     "check": "bunx --bun tsc",
     "lint": "bunx --bun eslint"
@@ -34,6 +34,7 @@
     "p-defer": "^4.0.1",
     "passport": "^0.7.0",
     "pino": "^9.6.0",
-    "pino-pretty": "^13.0.0"
+    "pino-pretty": "^13.0.0",
+    "pino-roll": "^3.1.0"
   }
 }

@@ -1,12 +1,22 @@
 import type { IAppConfig } from './IAppConfig'
 import * as fs from 'node:fs'
-import process from 'node:process'
 import yaml from 'yaml'
 
+function readConfigFile(filePath: string) {
+  console.info(`loading config file: [${filePath}]`)
+  if (fs.existsSync(filePath)) {
+    const configContent = fs.readFileSync(filePath, 'utf-8')
+    return yaml.parse(configContent) as IAppConfig
+  } else {
+    return {} as IAppConfig
+  }
+}
+
 function loadConfig() {
-  const env = process.env.NODE_ENV || 'dev'
-  const configContent = fs.readFileSync(`./config/${env}.yml`, 'utf-8')
-  return yaml.parse(configContent) as IAppConfig
+  const baseConfig = readConfigFile('./config/base.yml')
+  const env = import.meta.env.NODE_ENV || 'development'
+  const envConfig = readConfigFile(`./config/${env}.yml`)
+  return Object.assign(baseConfig, envConfig, { env })
 }
 
 export const appConfig = loadConfig()

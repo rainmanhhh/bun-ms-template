@@ -1,9 +1,12 @@
 import * as process from 'node:process'
+import { appConfig } from './config/appConfig.ts'
 import modules from './generated/modules'
 import { logger } from './logger.ts'
 
 async function main() {
-  for (const [moduleName, module] of Object.entries(modules as Record<string, any>)) {
+  logger.info('env: %s', appConfig.env)
+  const moduleEntries = Object.entries(modules as Record<string, any>)
+  for (const [moduleName, module] of moduleEntries) {
     const moduleDefaultExport = module.default
     if (typeof moduleDefaultExport === 'function') {
       try {
@@ -15,6 +18,7 @@ async function main() {
     }
     logger.debug('module [%s] loaded', moduleName)
   }
+  logger.info('all modules loaded. total count: %d', moduleEntries.length)
 }
 
 main().then()
