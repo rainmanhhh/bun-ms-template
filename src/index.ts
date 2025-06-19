@@ -4,7 +4,6 @@ import modules from './generated/modules'
 import { logger } from './logger.ts'
 
 async function main() {
-  logger.info('env: %s', appConfig.env)
   const moduleEntries = Object.entries(modules as Record<string, any>)
   for (const [moduleName, module] of moduleEntries) {
     const moduleDefaultExport = module.default
@@ -18,7 +17,7 @@ async function main() {
     }
     logger.debug('module [%s] loaded', moduleName)
   }
-  logger.info('all modules loaded. total count: %d', moduleEntries.length)
+  logger.info('app started with %d modules. env: %s', moduleEntries.length, appConfig.env)
 }
 
 main().then()

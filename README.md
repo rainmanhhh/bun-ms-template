@@ -9,6 +9,10 @@
 1. [环境准备](#环境准备)
 2. [项目脚本](#项目脚本)
 3. [配置文件](#配置文件)
+4. [编写业务代码](#编写业务代码)
+5. [模块加载机制说明](#模块加载机制说明)
+6. [eureka支持](#eureka支持)
+7. [日志说明](#日志说明)
 
 ---
 
@@ -74,9 +78,10 @@ bun run generate:api
 ## 配置文件
 - `src/config/appConfig.ts`用于加载配置文件并导出一个`appConfig`对象
 - 配置项类型定义在`src/config/IAppConfig.d.ts`中，每次修改此文件后，应重新执行`generate:configSchema`脚本，生成新的`config/schema.json`
-- 配置文件为yml格式，包括一个公共的基础配置文件（名为"base.yml"）和一个与运行环境相关的配置文件（名为"NODE_ENV.yml"，例如"development.yml""test.yml""production.yml"）
+- 配置文件为yml格式，包括一个公共的基础配置文件（名为"base.yml"）和一个与运行环境相关的配置文件（名为`${NODE_ENV}.yml`，例如`development.yml` `test.yml` `production.yml`）
 - 配置文件的第一行固定为`$schema: ./schema.json`，以绑定json schema
-- 本地运行调试时，NODE_ENV未指定，默认为development；编译打包后，NODE_ENV默认为production
+- 本地运行调试时，`NODE_ENV`未指定，默认为`development`；编译打包后，`NODE_ENV`默认为`production`
+- 代码中引用环境变量时，应使用`import.meta.env.XXX`，例如`import.meta.env.NODE_ENV`
 
 ## 编写业务代码
 **注意**：在`src/modules`目录下新增、删除、重命名任意文件后，应重新执行`generate:modules`
@@ -84,9 +89,17 @@ bun run generate:api
 - 根据openapi schema生成typescript接口文件，输出文件为`src/generated/server/api/XXX/types.ts`，类型为XXXApi
 - 在`src/modules/controller`目录下编写实现类（XXXApiImpl），注意：每个实现类文件尾部应创建实例并赋值给`routes`对象的对应字段，例如`routes.kooOo = new KooOoApiImpl()`
 
-## 模块（module）加载机制说明
+## 模块加载机制说明
 - `src/modules`目录（包括子目录）下的每个文件会被视为一个模块，完整的模块名由目录和文件名拼接构成，例如`src/modules/controller/user/index.ts`的模块名为`controller_user_index`
-- 模块文件的默认导出对象（default export）如果是函数，则会在自动加载时被执行
+- 模块文件的默认导出对象（default export）如果是函数，则会在自动加载时被执行（若函数为异步，下一个模块会在异步执行完毕后再开始加载）
 
 ## eureka支持
-如果配置了appConfig.eureka，则程序启动后会自动向eureka服务中心注册（服务名使用appConfig.name）
+如果配置了`appConfig.eureka`，则程序启动后会自动向eureka服务中心注册，服务名称为`${appConfig.name}`
+
+## 日志说明
+`src/logger.ts`文件导出了一个`logger`对象，底层实现为`pino`，所有日志均使用该对象打印，`development`环境默认输出到控制台(`pino-pretty`)，
+`production`环境默认输出到文件(`pino-roll`)。
+**注意**：`pino`输出变量与`console`不同，即使只有一个变量，也要显式定义占位符，例如
+```ts
+logger.info('hello %s', 'world')
+```
