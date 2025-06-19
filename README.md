@@ -74,8 +74,9 @@ bun run generate:api
 ## 配置文件
 - `src/config/appConfig.ts`用于加载配置文件并导出一个`appConfig`对象
 - 配置项类型定义在`src/config/IAppConfig.d.ts`中，每次修改此文件后，应重新执行`generate:configSchema`脚本，生成新的`config/schema.json`
-- 配置文件为yml格式，文件名为"NODE_ENV.yml"，例如"dev.yml""test.yml""production.yml"，第一行固定为`$schema: ./schema.json`，以绑定json schema
-- NODE_ENV未指定则默认为dev
+- 配置文件为yml格式，包括一个公共的基础配置文件（名为"base.yml"）和一个与运行环境相关的配置文件（名为"NODE_ENV.yml"，例如"development.yml""test.yml""production.yml"）
+- 配置文件的第一行固定为`$schema: ./schema.json`，以绑定json schema
+- 本地运行调试时，NODE_ENV未指定，默认为development；编译打包后，NODE_ENV默认为production
 
 ## 编写业务代码
 **注意**：在`src/modules`目录下新增、删除、重命名任意文件后，应重新执行`generate:modules`
