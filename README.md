@@ -80,7 +80,7 @@ bun run generate:api
 - 配置项类型定义在`src/config/IAppConfig.d.ts`中，每次修改此文件后，应重新执行`generate:configSchema`脚本，生成新的`config/schema.json`
 - 配置文件为yml格式，包括一个公共的基础配置文件（名为"base.yml"）和一个与运行环境相关的配置文件（名为`${NODE_ENV}.yml`，例如`development.yml` `test.yml` `production.yml`）
 - 配置文件的第一行固定为`$schema: ./schema.json`，以绑定json schema
-- 本地运行调试时，`NODE_ENV`未指定，默认为`development`；编译打包后，`NODE_ENV`默认为`production`
+- 若未指定`NODE_ENV`，默认为`development`。编译打包后，运行时需在命令中指定`NODE_ENV`为`production`
 - 代码中引用环境变量时，应使用`import.meta.env.XXX`，例如`import.meta.env.NODE_ENV`
 
 ## 编写业务代码
