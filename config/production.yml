@@ -3,12 +3,5 @@ $schema: ./schema.json
 #  host: localhost
 log:
   level: info
-  transport:
-    target: pino-roll
-    options:
-      mkdir: true
-      file: ./logs/app
-      extension: log
-      frequency: 'daily'
-      count: 10
-      size: 10m
+  file:
+    name: app

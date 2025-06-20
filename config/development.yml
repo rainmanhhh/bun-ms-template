@@ -3,7 +3,4 @@ $schema: ./schema.json
 #  host: localhost
 log:
   level: debug
-  transport:
-    target: pino-pretty
-    options:
-      colorize: true
+  console: true

@@ -3,7 +3,6 @@ import * as fs from 'node:fs'
 import yaml from 'yaml'
 
 function readConfigFile(filePath: string) {
-  console.info(`loading config file: [${filePath}]`)
   if (fs.existsSync(filePath)) {
     const configContent = fs.readFileSync(filePath, 'utf-8')
     return yaml.parse(configContent) as IAppConfig

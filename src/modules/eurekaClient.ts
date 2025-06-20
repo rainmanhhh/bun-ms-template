@@ -55,8 +55,9 @@ export default function () {
       if (err)
         d.reject(err)
       else
-        d.resolve(logger.info('eureka client started'))
+        d.resolve()
     })
+    d.promise.then(() => logger.info('eureka client started'))
     return d.promise
   }
 }

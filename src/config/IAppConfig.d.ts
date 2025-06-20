@@ -1,12 +1,37 @@
-import type { LoggerOptions } from 'pino'
-
 export interface IAppConfig {
   name: string
   server: {
     port: number
     failOnUnknownProperties?: boolean
   }
-  log: LoggerOptions
+  log: {
+    level: 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly'
+    /**
+     * output to console. default: false
+     */
+    console?: boolean
+    /**
+     * if not null, output to file.
+     */
+    file?: {
+      /**
+       * eg: `app`
+       */
+      name: string
+      /**
+       * default: `log`
+       */
+      suffix?: string
+      /**
+       * default: `30d`
+       */
+      ttl?: string
+      /**
+       * default: `128m`
+       */
+      maxSize?: string
+    }
+  }
   eureka?: {
     /**
      * eureka server host, eg: `localhost`
