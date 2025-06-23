@@ -86,8 +86,8 @@ bun run generate:api
 ## 编写业务代码
 - 在openapi schema(`openapi/openapi.yml`)中定义接口
 - 执行`generate:api`生成typescript接口文件，输出目录为`src/generated/server`
-- 在`src/modules/controller`目录下编写实现类，例如`src/modules/controller/FooApiImpl`应实现`src/generated/server/api/foo/types.ts`中定义的`FooApi`接口
-- **注意**：每个实现类文件尾部应创建实例并赋值给`routes`对象（`src/modules/server/routes.ts`）的对应字段，例如`routes.foo = new FooApiImpl()`
+- 在`src/modules/controller`目录下编写实现类，例如`src/modules/controller/FooBarApiImpl`应实现`src/generated/server/api/fooBar/types.ts`中定义的`FooBarApi`接口
+- **注意**：每个实现类文件尾部应创建实例并赋值给`routes`对象（`src/modules/server/server.ts`）的对应字段，例如`routes.fooBar = new FooBarApiImpl()`
 
 ## 模块加载机制
 - 每次执行`generate:modules`时，自动读取`src/modules`目录（包括子目录），该路径下的每个文件会被视为一个模块，完整的模块名由目录和文件名拼接构成，例如`src/modules/controller/user/index.ts`的模块名为`controller_user_index`

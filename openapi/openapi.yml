@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
-  title: koo-oo
-  description: koo-oo
+  title: foo-bar
+  description: foo-bar
   version: 1.0.0
   contact:
     name: hnsfy
@@ -21,7 +21,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Seq'
       tags:
-        - KooOo
+        - FooBar
 components:
   schemas:
     Seq:
@@ -40,4 +40,4 @@ components:
         - value
         - create_time
 tags:
-  - name: KooOo
+  - name: FooBar
