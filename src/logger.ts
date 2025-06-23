@@ -4,13 +4,17 @@ import { appConfig } from './config/appConfig'
 
 import 'winston-daily-rotate-file'
 
-const config = appConfig.log
+const config = appConfig.log ?? {}
 
 const logFormat = format.printf(({ level, message, timestamp }) => {
   return `${timestamp} [${level}]: ${message}`
 })
 
 const transportArr: LoggerOptions['transports'] = []
+if (appConfig.env === 'development' || appConfig.env === 'test') {
+  config.console = config.console ?? true
+  config.level = config.level ?? 'debug'
+}
 if (config.console) {
   transportArr.push(
     new transports.Console({
@@ -25,15 +29,21 @@ if (config.console) {
     })
   )
 }
+if (appConfig.env === 'production') {
+  config.file = config.file ?? {}
+  config.level = config.level ?? 'info'
+}
 if (config.file) {
   transportArr.push(
     new transports.DailyRotateFile({
       level: config.level,
-      filename: `logs/${config.file.name}-%DATE%.${config.file.suffix || 'log'}`,
+      filename: `logs/${config.file.name || appConfig.name}-%DATE%.${config.file.suffix || 'log'}`,
       datePattern: 'YYYY-MM-DD',
       zippedArchive: true,
       maxSize: config.file.maxSize || '128m',
-      maxFiles: config.file.ttl || '30d',
+      maxFiles: config.file.maxFiles || '30d',
+      auditFile: '.log-rotate.json',
+      createSymlink: true,
       format: format.combine(
         format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         format.align(),

@@ -1,7 +1,3 @@
 $schema: ./schema.json
 #eureka:
 #  host: localhost
-log:
-  level: info
-  file:
-    name: app

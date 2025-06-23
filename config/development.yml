@@ -1,6 +1,3 @@
 $schema: ./schema.json
 #eureka:
 #  host: localhost
-log:
-  level: debug
-  console: true

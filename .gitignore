@@ -25,3 +25,4 @@ dist-ssr
 
 config/schema.json
 generated/
+.log-rotate.json

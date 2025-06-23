@@ -96,10 +96,10 @@ bun run generate:api
 ## eureka支持
 如果配置了`appConfig.eureka`，则程序启动后会自动向eureka服务中心注册，服务名称为`${appConfig.name}`
 
-## 日志说明
-`src/logger.ts`文件导出了一个`logger`对象，底层实现为`pino`，所有日志均使用该对象打印，`development`环境默认输出到控制台(`pino-pretty`)，
-`production`环境默认输出到文件(`pino-roll`)。
-**注意**：`pino`输出变量与`console`不同，即使只有一个变量，也要显式定义占位符，例如
+## 日志
+- `src/logger.ts`文件导出了一个`logger`对象，底层实现为`winston`，所有日志均使用该对象打印。
+- 默认的配置为：`development`环境，日志输出到控制台；`production`环境，日志输出到文件，随日期和文件大小（默认128m）滚动（默认保留最新30天的日志文件），且自动创建一个`current.log`软链接指向最新的日志文件
+- **注意**：`winston`输出变量与`console`不同，即使只有一个变量，也要显式定义占位符，例如
 ```ts
 logger.info('hello %s', 'world')
 ```

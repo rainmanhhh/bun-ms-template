@@ -5,29 +5,32 @@ export interface IAppConfig {
     failOnUnknownProperties?: boolean
   }
   log: {
+    /**
+     * log level. default: `debug` if env is `development` or `test`; `info` if env is `production`
+     */
     level: 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly'
     /**
-     * output to console. default: false
+     * output to console. default set to `true` if env is `development` or `test`
      */
     console?: boolean
     /**
-     * if not null, output to file.
+     * if not null, output to file. default set to `{}` if env is `production`
      */
     file?: {
       /**
-       * eg: `app`
+       * log file name. default: ${appConfig.name}
        */
-      name: string
+      name?: string
       /**
        * default: `log`
        */
       suffix?: string
       /**
-       * default: `30d`
+       * max files to keep. can be count or days(with `d` suffix). default: `30d`
        */
-      ttl?: string
+      maxFiles?: string
       /**
-       * default: `128m`
+       * max single file size. default: `128m`
        */
       maxSize?: string
     }
