@@ -1,7 +1,7 @@
-# Bun-Server 业务应用模板
+# bun-ms-template 业务应用模板
 
 ## 简介
-业务应用开发模板，基于 Bun 运行时构建。
+服务端业务应用开发模板，基于 Bun 运行时构建。
 
 ---
 
@@ -19,10 +19,12 @@
 ## 环境准备
 
 ### 前置要求
-- [Bun](https://bun.sh/) v1.0.0+
+- [Bun](https://bun.sh/) v1.2.0+
 
-### 依赖安装
-```
+### 创建项目
+```bash
+git clone https://github.com/rainmanhhh/bun-ms-template.git my-project
+cd my-project
 bun i
 ```
 ---
