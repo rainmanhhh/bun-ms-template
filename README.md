@@ -23,7 +23,7 @@
 
 ### 创建项目
 ```bash
-git clone https://github.com/rainmanhhh/bun-ms-template.git my-project
+bun create rainmanhhh/bun-ms-template my-project
 cd my-project
 bun i
 ```
