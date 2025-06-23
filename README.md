@@ -88,7 +88,7 @@ bun run generate:api
 - 执行`generate:api`生成typescript接口文件，输出文件为`src/generated/server/api/XXX/types.ts`，类型为XXXApi
 - 在`src/modules/controller`目录下编写实现类（XXXApiImpl），注意：每个实现类文件尾部应创建实例并赋值给`routes`对象的对应字段，例如`routes.foo = new FooApiImpl()`
 
-## 模块加载机制说明
+## 模块加载机制
 - 每次执行`generate:modules`时，自动读取`src/modules`目录（包括子目录），该路径下的每个文件会被视为一个模块，完整的模块名由目录和文件名拼接构成，例如`src/modules/controller/user/index.ts`的模块名为`controller_user_index`
 - 模块文件的默认导出对象（default export）如果是函数，则会在自动加载时被执行（若函数为异步，下一个模块会在异步执行完毕后再开始加载）
 - 最终所有模块的引用会被合并生成为`src/generated/modules.ts`文件，app入口`src/index.ts`根据此文件加载模块
