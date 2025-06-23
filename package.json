@@ -1,6 +1,27 @@
 {
   "name": "bun-server",
   "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate:modules": "bun --bun prebuild/parseModules.ts",
+    "generate:configSchema": "bunx --bun typescript-json-schema tsconfig.json -i src/config/IAppConfig.d.ts -o config/schema.json IAppConfig",
+    "generate:api": "bunx --bun rimraf ./src/generated/server && bunx --bun openapi-generator-plus -c ./openapi/plus.yml",
+    "dev": "bun run generate:modules && bun --bun src/index.ts",
+    "build": "bun run generate:modules && bun build ./src/index.ts --outdir ./dist --target bun",
+    "preview": "cross-env NODE_ENV=production bun --bun dist/index.js",
+    "check": "bunx --bun tsc",
+    "lint": "bunx --bun eslint"
+  },
+  "dependencies": {
+    "eureka-js-client": "^4.5.0",
+    "express": "^5.1.0",
+    "ip": "^2.0.1",
+    "p-defer": "^4.0.1",
+    "passport": "^0.7.0",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^4.11.0",
     "@openapi-generator-plus/typescript-express-passport-server-generator": "^2.13.0",
@@ -15,26 +36,5 @@
     "rimraf": "^6.0.1",
     "typescript": "~5.7.2",
     "typescript-json-schema": "^0.65.1"
-  },
-  "private": true,
-  "scripts": {
-    "generate:modules": "bun --bun prebuild/parseModules.ts",
-    "generate:configSchema": "bunx --bun typescript-json-schema tsconfig.json -i src/config/IAppConfig.d.ts -o config/schema.json IAppConfig",
-    "generate:api": "bunx --bun rimraf ./src/generated/server && bunx --bun openapi-generator-plus -c ./openapi/plus.yml",
-    "dev": "bun run generate:modules && bun --bun src/index.ts",
-    "build": "bun run generate:modules && bun build ./src/index.ts --outdir ./dist --target bun",
-    "preview": "cross-env NODE_ENV=production bun --bun dist/index.js",
-    "check": "bunx --bun tsc",
-    "lint": "bunx --bun eslint"
-  },
-  "type": "module",
-  "dependencies": {
-    "eureka-js-client": "^4.5.0",
-    "express": "^5.1.0",
-    "ip": "^2.0.1",
-    "p-defer": "^4.0.1",
-    "passport": "^0.7.0",
-    "winston": "^3.17.0",
-    "winston-daily-rotate-file": "^5.0.0"
   }
 }
