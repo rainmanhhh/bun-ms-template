@@ -29,62 +29,38 @@ bun i
 
 ## 项目脚本
 
-在 `package.json` 中定义的核心开发指令：
+在 `package.json` 中定义的核心开发指令（使用`bun run <script>`执行）：
 
 ### `generate-modules`
-解析模块文件。扫描`src/modules`目录下的文件，生成`src/generated/modules.ts`
-```
-bun run generate-modules
-```
+解析模块文件。扫描`src/modules`目录下的文件，生成`src/generated/modules.ts`。详情见[模块加载机制](#模块加载机制)
 
 ### `generate-configSchema`
 生成config json schema。执行此脚本，将生成`config/schema.json`
-`config`目录下的配置文件，可绑定该json schema以获得自动补全提示，详情见[配置文件](#配置文件)
-```
-bun run generate-configSchema
-```
+`config`目录下的配置文件，可绑定该json schema以获得自动补全提示。详情见[配置文件](#配置文件)
 
 ### `generate-api`
 生成api接口代码。每次修改openapi schema后，执行此脚本生成typescript接口（输出路径为`src/generated/server`）
-```
-bun run generate-api
-```
 
 ### `dev`
 启动开发服务器
-```
-bun run dev
-```
 
 ### `build`
 编译打包
-```
-bun run build
-```
 
 ### `preview`
-预览打包后的app。本地启动`dist/index.js`进行预览
-```
-bun run preview
-```
+预览打包后的app。先通过`cross-env`将`NODE_ENV`设置为`production`，然后启动`dist/index.js`进行预览
 
 ### `check`
 检查typescript编译错误和警告
-```
-bun run check
-```
 
 ### `lint`
 检查lint错误和警告（不自动修复）
-```
-bun run lint
-```
 
 ## 配置文件
 - `src/config/appConfig.ts`用于加载配置文件并导出一个`appConfig`对象
 - 配置项类型定义在`src/config/IAppConfig.d.ts`中，每次修改此文件后，应重新执行[generate-configSchema](#generate-configSchema)，生成新的`config/schema.json`
 - 配置文件为yml格式，包括一个公共的基础配置文件（名为`base.yml`）和一个与运行环境相关的配置文件（名为`${NODE_ENV}.yml`，例如`development.yml` `test.yml` `production.yml`）
-- 配置文件的第一行固定为`$schema: ./schema.json`，以绑定json schema
+- 配置文件的第一行加上`$schema: ./schema.json`，可绑定json schema，实现自动补全
 - 若未指定`NODE_ENV`，默认为`development`。编译打包后，运行时需在命令中指定`NODE_ENV`为`production`（参考[preview](#preview)，以及`start.sh`）
 - 代码中引用环境变量时，应使用`import.meta.env.XXX`，例如`import.meta.env.NODE_ENV`
 
