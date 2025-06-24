@@ -2,8 +2,8 @@ import { writeFileSync } from 'node:fs'
 import { glob } from 'glob'
 
 function parseModules() {
-// 1. 扫描模块路径
   const files = glob.sync('src/modules/**/*.ts')
+    .filter(file => !file.endsWith('.d.ts')) // 排除 .d.ts 类型定义文件
     .sort((a, b) => a.localeCompare(b))
 
   const moduleNames: string[] = []
