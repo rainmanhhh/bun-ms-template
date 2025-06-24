@@ -3,7 +3,7 @@ import { glob } from 'glob'
 
 function parseModules() {
   const files = glob.sync('src/modules/**/*.ts')
-    .filter(file => !file.endsWith('.d.ts')) // 排除 .d.ts 类型定义文件
+    .filter(file => !file.endsWith('.d.ts') && !file.endsWith('.test.ts')) // 排除类型定义文件和测试脚本
     .sort((a, b) => a.localeCompare(b))
 
   const moduleNames: string[] = []

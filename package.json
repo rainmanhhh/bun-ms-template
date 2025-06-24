@@ -11,7 +11,8 @@
     "build": "bun run generate-modules && bun build ./src/index.ts --outdir ./dist --target bun",
     "preview": "cross-env NODE_ENV=production bun --bun dist/index.js",
     "check": "bunx --bun tsc",
-    "lint": "bunx --bun eslint"
+    "lint": "bunx --bun eslint",
+    "test": "bun test"
   },
   "dependencies": {
     "eureka-js-client": "^4.5.0",

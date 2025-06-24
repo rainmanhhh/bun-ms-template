@@ -58,6 +58,9 @@ bun i && bun run generate-api && bun run generate-modules && bun run generate-co
 ### `lint`
 检查lint错误和警告（不自动修复）
 
+### `test`
+运行单元测试（使用`bun:test`）
+
 ## 配置文件
 - `src/config/appConfig.ts`用于加载配置文件并导出一个`appConfig`对象
 - 配置项类型定义在`src/config/IAppConfig.d.ts`中，每次修改此文件后，应重新执行[generate-configSchema](#generate-configSchema)，生成新的`config/schema.json`
@@ -87,3 +90,6 @@ bun i && bun run generate-api && bun run generate-modules && bun run generate-co
 ```ts
 logger.info('hello %s', 'world')
 ```
+
+## 测试
+测试文件命名格式为`*.test.ts`，执行[test](#test)即可运行所有测试用例
