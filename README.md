@@ -25,7 +25,7 @@
 ```bash
 bun create rainmanhhh/bun-ms-template my-project
 cd my-project
-bun i
+bun i && bun run generate-api && bun run generate-modules && bun run generate-configSchema
 ```
 ---
 
@@ -33,15 +33,15 @@ bun i
 
 在 `package.json` 中定义的核心开发指令（使用`bun run <script>`执行）：
 
+### `generate-api`
+生成api接口代码。每次修改openapi schema后，执行此脚本生成typescript接口（输出路径为`src/generated/server`）
+
 ### `generate-modules`
 解析模块文件。扫描`src/modules`目录下的文件，生成`src/generated/modules.ts`。详情见[模块加载机制](#模块加载机制)
 
 ### `generate-configSchema`
 生成config json schema。执行此脚本，将生成`config/schema.json`
 `config`目录下的配置文件，可绑定该json schema以获得自动补全提示。详情见[配置文件](#配置文件)
-
-### `generate-api`
-生成api接口代码。每次修改openapi schema后，执行此脚本生成typescript接口（输出路径为`src/generated/server`）
 
 ### `dev`
 启动开发服务器
