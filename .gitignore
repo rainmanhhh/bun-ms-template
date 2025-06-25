@@ -23,6 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 
+openapi/**/out/
+
 config/schema.json
 generated/
 !generated/.gitignore
