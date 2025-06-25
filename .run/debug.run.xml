@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="debug" type="BunRunConfiguration">
+    <option name="program" value="src/index.ts" />
+    <option name="runtimeParameters">
+      <list>
+        <option value="--bun" />
+      </list>
+    </option>
+    <option name="workingDirectory" value="$PROJECT_DIR$" />
+    <method v="2" />
+  </configuration>
+</component>
