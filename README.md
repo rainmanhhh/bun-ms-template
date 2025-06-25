@@ -79,11 +79,12 @@ bun i && bun run generate-api && bun run generate-modules && bun run generate-co
 
 ## 模块加载机制
 - 每次执行[generate-modules](#generate-modules)时，自动读取`src/modules`目录（包括子目录），该路径下的每个文件会被视为一个模块，完整的模块名由目录和文件名拼接构成，例如`src/modules/controller/user/index.ts`的模块名为`controller_user_index`
-- 模块文件的默认导出对象（default export）如果是函数，则会在自动加载时被执行（若函数为异步，下一个模块会在异步执行完毕后再开始加载）
 - 最终所有模块的引用会被合并生成为`src/generated/modules.ts`文件，app入口`src/index.ts`根据此文件加载模块
+- 模块文件的默认导出对象（default export）如果是函数，则会在自动加载时被执行（若函数为异步，下一个模块会在异步执行完毕后再开始加载），可额外导出一个数字常量`order`来控制此函数的执行顺序（未指定则视为order=0）
+- `routes.ts``errorHandler.ts``server.ts`的默认`order`分别设为500,999,1000（`controller`目录下的文件不指定`order`，相当于全部为0）。如此可保证所有的controller先将自己添加到`routes`中，然后`routes`一次性为`server`批量注册路由，然后注册错误处理器，最后启动web服务
 
 ## eureka支持
-如果配置了`appConfig.eureka`，则程序启动后会自动向eureka服务中心注册，服务名称为`${appConfig.name}`
+如果配置了`${appConfig.eureka}`，则程序启动时会自动向eureka服务中心注册（服务名称为`${appConfig.name}`）
 
 ## 日志
 - `src/logger.ts`文件导出了一个`logger`对象，底层实现为`winston`，所有日志均使用该对象打印。
