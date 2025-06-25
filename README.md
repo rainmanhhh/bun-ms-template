@@ -13,6 +13,8 @@
 5. [模块加载机制](#模块加载机制)
 6. [eureka支持](#eureka支持)
 7. [日志](#日志)
+8. [测试](#测试)
+9. [其他](#其他)
 
 ---
 
@@ -93,3 +95,7 @@ logger.info('hello %s', 'world')
 
 ## 测试
 测试文件命名格式为`*.test.ts`，执行[test](#test)即可运行所有测试用例
+
+## 其他
+- tsconfig中lib配置了ESNext + DOM，如果要使用DOM的某些接口（例如form-data），需添加对应的polyfill。
+- 自带dateUtil和uuidUtil以提供常用功能
