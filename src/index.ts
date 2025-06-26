@@ -20,7 +20,6 @@ async function main() {
         exec: moduleDefaultExport
       })
     }
-    logger.debug('module [%s] loaded', moduleName)
   }
   for (const module of runnableModules.sort((a, b) => a.order - b.order)) {
     try {
