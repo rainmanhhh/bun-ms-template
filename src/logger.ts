@@ -6,8 +6,9 @@ import 'winston-daily-rotate-file'
 
 const config = appConfig.log ?? {}
 
-const logFormat = format.printf(({ level, message, timestamp }) => {
-  return `${timestamp} [${level}]: ${message}`
+const logFormat = format.printf(({ level, message, timestamp, stack }) => {
+  const text = `${timestamp} [${level}]: ${message}`
+  return stack ? `${text}\n${stack}` : text
 })
 
 const transportArr: LoggerOptions['transports'] = []
