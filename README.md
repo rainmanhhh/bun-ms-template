@@ -89,6 +89,7 @@ bun i && bun run generate-api && bun run generate-modules && bun run generate-co
   - `modules/server/errorHandler.ts`(order=999)。web服务启动前注册错误处理器
   - `modules/server/server.ts`(order=1000)。启动web服务
   - `modules/server/`目录下的其他文件(不指定`order`，相当于全部为0)。所有的`controller`在`routes`注册路由前先将自己添加到`routes`中（`eurekaClient`自带actuator端点，故也属于`controller`角色）
+**注意**：`server`的底层实现为`express`，要自定义中间件，可参照`reqContextHandler`或`errorHandler`
 
 ## eureka支持
 如果配置了`${appConfig.eureka}`，则程序启动时会自动向eureka服务中心注册（服务名称为`${appConfig.name}`）
