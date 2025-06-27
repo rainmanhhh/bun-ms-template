@@ -10,7 +10,7 @@
 2. [项目脚本](#项目脚本)
 3. [配置文件](#配置文件)
 4. [编写业务代码](#编写业务代码)
-5. [模块加载机制](#模块加载机制)
+5. [模块加载](#模块加载)
 6. [eureka支持](#eureka支持)
 7. [日志](#日志)
 8. [测试](#测试)
@@ -29,6 +29,7 @@ bun create rainmanhhh/bun-ms-template my-project
 cd my-project
 bun i && bun run generate-api && bun run generate-modules && bun run generate-configSchema
 ```
+**注意**：创建项目时，必须先按以上顺序执行一次generate系列脚本，否则编译会报错
 ---
 
 ## 项目脚本
@@ -39,7 +40,7 @@ bun i && bun run generate-api && bun run generate-modules && bun run generate-co
 生成api接口代码。每次修改openapi schema后，执行此脚本生成typescript接口（输出路径为`src/generated/server`）
 
 ### `generate-modules`
-解析模块文件。扫描`src/modules`目录下的文件，生成`src/generated/modules.ts`。详情见[模块加载机制](#模块加载机制)
+解析模块文件。扫描`src/modules`目录下的文件，生成`src/generated/modules.ts`。详情见[模块加载](#模块加载)
 
 ### `generate-configSchema`
 生成config json schema。执行此脚本，将生成`config/schema.json`
@@ -49,7 +50,7 @@ bun i && bun run generate-api && bun run generate-modules && bun run generate-co
 启动开发服务器
 
 ### `build`
-编译打包
+编译打包。输出目录为`dist`，部署到服务器时，需上传`dist`和`config`目录，同时还可上传`start.sh`和`end.sh`用于生产环境启停服务
 
 ### `preview`
 预览打包后的app。先通过`cross-env`将`NODE_ENV`设置为`production`，然后启动`dist/index.js`进行预览
@@ -72,19 +73,26 @@ bun i && bun run generate-api && bun run generate-modules && bun run generate-co
 - 代码中引用环境变量时，应使用`import.meta.env.XXX`，例如`import.meta.env.NODE_ENV`
 
 ## 编写业务代码
+按以下步骤进行开发：
 - 在openapi schema(`openapi/openapi.yml`)中定义接口
 - 执行[generate-api](#generate-api)生成typescript接口文件，输出目录为`src/generated/server`
 - 在`src/modules/controller`目录下编写实现类，例如`src/modules/controller/FooBarApiImpl`应实现`src/generated/server/api/fooBar/types.ts`中定义的`FooBarApi`接口
 - **注意**：每个实现类文件尾部应创建实例并赋值给`routes`对象（`src/modules/server/server.ts`）的对应字段，例如`routes.fooBar = new FooBarApiImpl()`
 
-## 模块加载机制
+## 模块加载
 - 每次执行[generate-modules](#generate-modules)时，自动读取`src/modules`目录（包括子目录），该路径下的每个文件会被视为一个模块，完整的模块名由目录和文件名拼接构成，例如`src/modules/controller/user/index.ts`的模块名为`controller_user_index`
 - 最终所有模块的引用会被合并生成为`src/generated/modules.ts`文件，app入口`src/index.ts`根据此文件加载模块
 - 模块文件的默认导出对象（default export）如果是函数，则会在自动加载时被执行（若函数为异步，下一个模块会在异步执行完毕后再开始加载），可额外导出一个数字常量`order`来控制此函数的执行顺序（未指定则视为order=0）
-- `routes.ts``errorHandler.ts``server.ts`的默认`order`分别设为500,999,1000（`controller`目录下的文件不指定`order`，相当于全部为0）。如此可保证所有的controller先将自己添加到`routes`中，然后`routes`一次性为`server`批量注册路由，然后注册错误处理器，最后启动web服务
+- 自带模块：
+  - `modules/server/reqContextHandler.ts`(order=-1000) 。将web请求对象`req`绑定到异步上下文`reqContext`，后续的请求处理函数可访问此对象来获取url和请求头等
+  - `modules/server/routes.ts`(order=500)。`routes`一次性为`server`批量注册路由
+  - `modules/server/errorHandler.ts`(order=999)。web服务启动前注册错误处理器
+  - `modules/server/server.ts`(order=1000)。启动web服务
+  - `modules/server/`目录下的其他文件(不指定`order`，相当于全部为0)。所有的`controller`在`routes`注册路由前先将自己添加到`routes`中（`eurekaClient`自带actuator端点，故也属于`controller`角色）
 
 ## eureka支持
 如果配置了`${appConfig.eureka}`，则程序启动时会自动向eureka服务中心注册（服务名称为`${appConfig.name}`）
+**注意**：为避免自动识别ip时获取到127.0.0.1，建议手动配置`${appConfig.eureka.subnet}`指定app所在的网段
 
 ## 日志
 - `src/logger.ts`文件导出了一个`logger`对象，底层实现为`winston`，所有日志均使用该对象打印。
