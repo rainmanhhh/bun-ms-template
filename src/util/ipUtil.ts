@@ -14,12 +14,15 @@ export const ipUtil = {
             if (subnet.contains(iFace.address))
               return iFace.address
           } else {
-            return iFace.address
+            if (iFace.address !== '127.0.0.1')
+              return iFace.address
           }
         }
       }
     }
-    throw new Error(`No ${family} address found for subnet: '${subnetPattern}'`)
+    if (family === 'IPv4' && !subnet)
+      return '127.0.0.1'
+    throw new Error(`No ${family} address found for subnet: ${subnetPattern}`)
   },
   v4(subnetPattern?: string) {
     return ipUtil.address('IPv4', subnetPattern)

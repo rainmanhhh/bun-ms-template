@@ -94,7 +94,7 @@ bun i && bun run generate-api && bun run generate-modules && bun run generate-co
 
 ## eureka支持
 如果配置了`${appConfig.eureka}`，则程序启动时会自动向eureka服务中心注册（服务名称为`${appConfig.name}`）
-**注意**：为避免自动识别ip时获取到127.0.0.1，建议手动配置`${appConfig.eureka.subnet}`指定app所在的网段
+**注意**：若服务器有多个ip（例如部署了docker），建议手动配置`${appConfig.eureka.subnet}`指定app所在的网段
 
 ## 日志
 - `src/logger.ts`文件导出了一个`logger`对象，底层实现为`winston`，所有日志均使用该对象打印。
