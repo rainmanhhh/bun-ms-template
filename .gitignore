@@ -26,6 +26,6 @@ dist-ssr
 openapi/**/out/
 
 config/schema.json
-generated/
 !generated/.gitignore
+generated/
 .log-rotate.json
