@@ -3,10 +3,17 @@ import { logger } from '../../logger.ts'
 import { server } from './server.ts'
 
 export default function () {
-  server.use((err: Error | null, _req: Request, res: Response, next: NextFunction) => {
+  server.use((err: Error | any | null, _req: Request, res: Response, next: NextFunction) => {
     if (err) {
-      logger.error('Unhandled error:', err)
-      res.status(500).json({ code: 500, message: err.message })
+      let message = ''
+      if (err instanceof Error) {
+        message = err.message
+        logger.error('web error:', err)
+      } else {
+        message = String(err)
+        logger.error('web error: %s', message)
+      }
+      res.status(500).json({ code: 500, message })
     } else {
       next()
     }
