@@ -6,7 +6,7 @@ info:
   contact:
     name: hnsfy
 servers:
-  - url: 'http://localhost:5000'
+  - url: http://localhost:5000
     description: local
 paths:
   /mySeq:
@@ -15,12 +15,12 @@ paths:
       operationId: get-mySeq
       description: 生成一个序列号
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Seq'
+                $ref: "#/components/schemas/Seq"
       tags:
         - FooBar
 components:
@@ -28,7 +28,7 @@ components:
     Seq:
       title: Seq
       type: object
-      description: 'get-mySeq返回报文（序列号） '
+      description: "get-mySeq返回报文（序列号） "
       properties:
         value:
           type: integer
@@ -40,5 +40,12 @@ components:
       required:
         - value
         - create_time
+  securitySchemes:
+    apiKey1:
+      name: X-API-KEY
+      type: apiKey
+      in: header
 tags:
   - name: FooBar
+security:
+  - apiKey1: []
