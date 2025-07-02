@@ -9,11 +9,11 @@ servers:
   - url: http://localhost:5000
     description: local
 paths:
-  /mySeq:
+  /:
     get:
-      summary: My Sequence
-      operationId: get-mySeq
-      description: 生成一个序列号
+      summary: test
+      operationId: test
+      description: 生成一个序列号。如果传入了err参数，抛出错误
       responses:
         "200":
           description: OK
@@ -23,12 +23,18 @@ paths:
                 $ref: "#/components/schemas/Seq"
       tags:
         - FooBar
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: err
+    parameters: []
 components:
   schemas:
     Seq:
       title: Seq
       type: object
-      description: "get-mySeq返回报文（序列号） "
+      description: "test返回报文（序列号） "
       properties:
         value:
           type: integer
