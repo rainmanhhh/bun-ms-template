@@ -7,10 +7,13 @@ import { server } from './server.ts'
 
 const eureka = appConfig.eureka
 
+let instanceId = ''
+
 function initEurekaClient(e: Exclude<typeof eureka, undefined>) {
   const app = appConfig.name
   const ipAddr = ipUtil.v4(e.subnet)
   const port = appConfig.server.port
+  instanceId = `${app}:${ipAddr}:${port}`
   return new Eureka({
     instance: {
       app,
@@ -21,7 +24,7 @@ function initEurekaClient(e: Exclude<typeof eureka, undefined>) {
         '@enabled': true,
       },
       vipAddress: app,
-      instanceId: `${app}:${ipAddr}:${port}`,
+      instanceId,
       dataCenterInfo: {
         '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
         'name': 'MyOwn',
@@ -57,7 +60,7 @@ export default function () {
       else
         d.resolve()
     })
-    d.promise.then(() => logger.info('eureka client started'))
+    d.promise.then(() => logger.info('eureka client started. instanceId: %s', instanceId))
     return d.promise
   }
 }
