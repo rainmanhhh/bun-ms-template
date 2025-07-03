@@ -9,6 +9,7 @@ interface RunnableModule {
   exec: () => any
 }
 async function main() {
+  logger.info('env: %s, loadedConfigFiles: %s', appConfig.env, JSON.stringify(appConfig.configFiles))
   const moduleEntries = Object.entries(modules as Record<string, any>)
   const runnableModules: RunnableModule[] = []
   for (const [moduleName, module] of moduleEntries) {
@@ -30,7 +31,7 @@ async function main() {
       process.exit(1)
     }
   }
-  logger.info('app started with %d modules. env: %s', moduleEntries.length, appConfig.env)
+  logger.info('app started with %d modules', moduleEntries.length)
 }
 
 main().then()
