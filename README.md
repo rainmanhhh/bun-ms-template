@@ -94,8 +94,9 @@ bun i && bun run generate-api && bun run generate-modules && bun run generate-co
 **注意**：`server`的底层实现为`express`，要自定义中间件，可参照`reqContextHandler`或`errorHandler`
 
 ## eureka支持
-如果配置了`${appConfig.eureka}`，则程序启动时会自动向eureka服务中心注册（服务名称为`${appConfig.name}`）
-**注意**：若服务器有多个ip（例如部署了docker），建议手动配置`${appConfig.eureka.subnet}`指定app所在的网段
+如果配置了`${appConfig.eureka}`，则程序启动时会自动创建一个`eurekaClient`，向eureka服务中心注册（服务名称为`${appConfig.name}`，instanceId格式为`${appConfig.name}:${ipAddr}:${port}`）
+**注意**：若服务器有多个ip（例如双网卡，或部署了docker），建议手动配置`${appConfig.eureka.subnet}`指定app所在的网段，否则`${ipAddr}`可能会取到错误的值
+`eurekaClient`启动时会根据配置`${appConfig.eureka.statusPagePath}`（默认值`/actuator/info`）和`${appConfig.eureka.healthCheckPath}`（默认值`/actuator/health`）添加两个路由端点，向注册中心提供服务状态信息
 
 ## 日志
 - `src/logger.ts`文件导出了一个`logger`对象，底层实现为`winston`，所有日志均使用该对象打印。

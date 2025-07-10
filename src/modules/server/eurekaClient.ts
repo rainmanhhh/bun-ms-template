@@ -14,6 +14,10 @@ function initEurekaClient(e: Exclude<typeof eureka, undefined>) {
   const ipAddr = ipUtil.v4(e.subnet)
   const port = appConfig.server.port
   instanceId = `${app}:${ipAddr}:${port}`
+  e.port = e.port || 8761
+  e.servicePath = e.servicePath || '/eureka/apps/'
+  e.statusPagePath = e.statusPagePath || '/actuator/info'
+  e.healthCheckPath = e.healthCheckPath || '/actuator/health'
   return new Eureka({
     instance: {
       app,
@@ -30,29 +34,31 @@ function initEurekaClient(e: Exclude<typeof eureka, undefined>) {
         'name': 'MyOwn',
       },
       homePageUrl: `http://${ipAddr}:${port}/`,
-      statusPageUrl: `http://${ipAddr}:${port}/actuator/info`,
-      healthCheckUrl: `http://${ipAddr}:${port}/actuator/health`,
+      statusPageUrl: `http://${ipAddr}:${port}${e.statusPagePath}`,
+      healthCheckUrl: `http://${ipAddr}:${port}${e.healthCheckPath}`,
     },
     eureka: {
       host: e.host,
-      port: e.port || 8761,
-      servicePath: e.servicePath || '/eureka/apps/',
+      port: e.port,
+      servicePath: e.servicePath,
     },
   })
 }
 
-export const eurekaClient = eureka
-  ? initEurekaClient(eureka)
-  : null
+export const eurekaClient = eureka ? initEurekaClient(eureka) : null
 
 export default function () {
   if (eurekaClient) {
-    server.get('/actuator/info', (_req, res) => {
-      res.json({})
-    })
-    server.get('/actuator/health', (_req, res) => {
-      res.json({ status: 'UP' })
-    })
+    if (eureka?.statusPagePath) {
+      server.get(eureka.statusPagePath, (_req, res) => {
+        res.json({})
+      })
+    }
+    if (eureka?.healthCheckPath) {
+      server.get(eureka.healthCheckPath, (_req, res) => {
+        res.json({ status: 'UP' })
+      })
+    }
     const d = defer<void>()
     eurekaClient.start((err, _rest) => {
       if (err)

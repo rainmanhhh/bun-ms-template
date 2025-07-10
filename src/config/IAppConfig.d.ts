@@ -52,5 +52,42 @@ export interface IAppConfig {
      * subnet pattern for app ip address, eg: `192.168.1.0/24`. if not set, the first ip address will be used
      */
     subnet?: string
+    /**
+     * app status page path. should start with `/`. default value is `/actuator/info`
+     */
+    statusPagePath?: string
+    /**
+     * app health check path. should start with `/`. default value is `/actuator/health`
+     */
+    healthCheckPath?: string
+  }
+  busi: {
+    appId: string
+    appSecret: string
+    /**
+     * 登录用户名
+     */
+    userAccount: string
+    /**
+     * 登录密码
+     */
+    userPassword: string
+    /**
+     * 目标服务地址
+     */
+    url: {
+      /**
+       * 权限认证
+       */
+      auth: string
+      /**
+       * 健康档案
+       */
+      jkda: string
+      /**
+       * 好孕相伴
+       */
+      hyxb: string
+    }
   }
 }
