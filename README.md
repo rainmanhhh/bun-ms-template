@@ -85,7 +85,7 @@ bun i && bun run generate-api && bun run generate-modules && bun run generate-co
 - 模块文件的默认导出对象（default export）如果是函数，则会在自动加载时被执行（若函数为异步，下一个模块会在异步执行完毕后再开始加载），可额外导出一个数字常量`order`来控制此函数的执行顺序（未指定则视为order=0）
 - 自带模块：
   - `modules/server/reqContextHandler.ts`(order=-1000) 。将web请求对象`req`绑定到异步上下文`reqContext`，后续的请求处理函数可访问此对象来获取url和请求头等
-  - `modules/server/passportHandler.ts`(order=-500)。默认的passport处理器，用于处理openapi示例中定义的全局安全令牌apiKey1（从http头获取X-API-KEY，总是返回成功）
+  - `modules/server/passportHandler.ts`(order=-500)。默认的passport处理器(demo)，用于处理openapi示例中定义的全局安全令牌apiKey1（从http头获取X-API-KEY，总是返回成功）
   - `modules/server/routes.ts`(order=500)。`routes`一次性为`server`批量注册路由
   - `modules/server/errorHandler.ts`(order=999)。web服务启动前注册错误处理器
   - `modules/server/server.ts`(order=1000)。启动web服务
