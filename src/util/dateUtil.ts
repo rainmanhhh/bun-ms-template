@@ -59,22 +59,22 @@ export const dateUtil = {
   },
   /**
    *
-   * @param date default: now
+   * @param date set to `0` to get today
    * @param pattern default: 'YYYY-MM-DD'
    */
-  dateStr(date: DATE = dayjs(), pattern = 'YYYY-MM-DD') {
-    if (date === '')
+  dateStr(date: DATE | null | undefined, pattern = 'YYYY-MM-DD') {
+    if (date == null || date === '')
       return ''
     const d = toDayjs(date)
     return d.format(pattern)
   },
   /**
    *
-   * @param date default: now
+   * @param date set to `0` to get now
    * @param pattern default: 'HH:mm:ss'
    */
-  timeStr(date: DATE = dayjs(), pattern = 'HH:mm:ss') {
-    if (date === '')
+  timeStr(date: DATE | null | undefined, pattern = 'HH:mm:ss') {
+    if (date == null || date === '')
       return ''
     const d = toDayjs(date)
     return d.format(pattern)
@@ -82,12 +82,12 @@ export const dateUtil = {
   /**
    * WARNING: default output format(YYYY-MM-DD HH:mm:ss) should not be used for api date param,
    * because new Date(YYYY-MM-DD HH:mm:ss) not supported by IOS
-   * @param date default: now
+   * @param date set to `0` to get now
    * @param pattern default: 'YYYY-MM-DD HH:mm:ss'
    * @example dateUtil.datetimeStr(0, 'YYYYMMDDHHmmss') // 0 means now(dayjs() add 0 day)
    */
-  datetimeStr(date: DATE = dayjs(), pattern = 'YYYY-MM-DD HH:mm:ss') {
-    if (date === '')
+  datetimeStr(date: DATE | null | undefined, pattern = 'YYYY-MM-DD HH:mm:ss') {
+    if (date == null || date === '')
       return ''
     const d = toDayjs(date)
     return d.format(pattern)
