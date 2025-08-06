@@ -61,33 +61,5 @@ export interface IAppConfig {
      */
     healthCheckPath?: string
   }
-  busi: {
-    appId: string
-    appSecret: string
-    /**
-     * 登录用户名
-     */
-    userAccount: string
-    /**
-     * 登录密码
-     */
-    userPassword: string
-    /**
-     * 目标服务地址
-     */
-    url: {
-      /**
-       * 权限认证
-       */
-      auth: string
-      /**
-       * 健康档案
-       */
-      jkda: string
-      /**
-       * 好孕相伴
-       */
-      hyxb: string
-    }
-  }
+  // busi: {}
 }
