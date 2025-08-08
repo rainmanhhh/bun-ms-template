@@ -12,9 +12,10 @@
 4. [编写业务代码](#编写业务代码)
 5. [模块加载](#模块加载)
 6. [eureka支持](#eureka支持)
-7. [日志](#日志)
-8. [测试](#测试)
-9. [其他](#其他)
+7. [数据库支持](#数据库支持)
+8. [日志](#日志)
+9. [测试](#测试)
+10. [其他](#其他)
 
 ---
 
@@ -27,7 +28,7 @@
 ```bash
 bun create rainmanhhh/bun-ms-template my-project
 cd my-project
-bun i && bun run generate-api && bun run generate-modules && bun run generate-configSchema
+bun i && bun run generate-api && bun run generate-modules && bun run generate-db && bun run generate-configSchema
 ```
 **注意**：创建项目时，必须先按以上顺序执行一次generate系列脚本，否则编译会报错
 ---
@@ -107,6 +108,11 @@ bun i && bun run generate-api && bun run generate-modules && bun run generate-co
 如果配置了`${appConfig.eureka}`，则程序启动时会自动创建一个`eurekaClient`，向eureka服务中心注册（服务名称为`${appConfig.name}`，instanceId格式为`${appConfig.name}:${ipAddr}:${port}`）
 **注意**：若服务器有多个ip（例如双网卡，或部署了docker），建议手动配置`${appConfig.eureka.subnet}`指定app所在的网段，否则`${ipAddr}`可能会取到错误的值
 `eurekaClient`启动时会根据配置`${appConfig.eureka.statusPagePath}`（默认值`/actuator/info`）和`${appConfig.eureka.healthCheckPath}`（默认值`/actuator/health`）添加两个路由端点，向注册中心提供服务状态信息
+
+## 数据库支持
+- 使用drizzle-orm访问数据库，配置文件为`prebuild/drizzle.config.ts`
+- 模板中默认加入了mysql2作为驱动，若使用其他数据库可进行替换
+- 连接配置在`appConfig.dbUrl`，执行`generate-db`会读取数据库反向生成schema（输出到`drizzle`目录下）
 
 ## 日志
 - `src/logger.ts`文件导出了一个`logger`对象，底层实现为`winston`，所有日志均使用该对象打印。

@@ -61,5 +61,9 @@ export interface IAppConfig {
      */
     healthCheckPath?: string
   }
+  /**
+   * eg.`mysql://root:password@localhost:3306/mydb`
+   */
+  dbUrl?: string
   // busi: {}
 }
