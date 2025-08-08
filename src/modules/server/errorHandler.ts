@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express'
-import { logger } from '../../logger.ts'
+import { logger } from '~/logger.ts'
 import { server } from './server.ts'
 
 export default function () {
