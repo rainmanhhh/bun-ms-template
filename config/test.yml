@@ -1,0 +1,5 @@
+$schema: ./schema.json
+#eureka:
+#  host: localhost
+#  subnet: 192.168.1.0/24
+dbUrl: mysql://user?:password?@127.0.0.1:3306/test?connectTimeout=30000
