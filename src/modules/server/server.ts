@@ -1,6 +1,6 @@
 import express from 'express'
-import { appConfig } from '../../config/appConfig.ts'
-import { logger } from '../../logger.ts'
+import { appConfig } from '~/config/appConfig.ts'
+import { logger } from '~/logger.ts'
 
 export const server = express()
 

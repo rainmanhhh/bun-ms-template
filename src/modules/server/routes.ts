@@ -1,7 +1,7 @@
-import type { ApiImplementation } from '../../generated/server/types.ts'
-import { appConfig } from '../../config/appConfig.ts'
+import type { ApiImplementation } from '~/generated/server/types.ts'
+import { appConfig } from '~/config/appConfig.ts'
+import { logger } from '~/logger.ts'
 import setupRoutes from '../../generated/server'
-import { logger } from '../../logger.ts'
 import { server } from './server.ts'
 
 export const routes: Partial<ApiImplementation> = {}
