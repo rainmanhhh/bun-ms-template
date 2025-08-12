@@ -16,4 +16,7 @@ export const db = drizzle(
     mode: dbConfig?.mode ?? 'default'
   }
 )
-logger.info('drizzle instance created.')
+if (dbConfig?.url)
+  logger.info('drizzle instance created.')
+else
+  logger.info('db url not set. drizzle instance unavailable')

@@ -1,6 +1,6 @@
+import type { IDbConfig } from '~/config/IDbConfig'
 import type { IEurekaConfig } from '~/config/IEurekaConfig'
 import type { ILogConfig } from '~/config/ILogConfig'
-import type { IDbConfig } from '~/config/IDbConfig'
 
 export interface IAppConfig {
   name: string
@@ -13,6 +13,6 @@ export interface IAppConfig {
   /**
    * eg.`mysql://root:password@localhost:3306/mydb`
    */
-  db?: IDbConfigUrl
+  db?: IDbConfig
   // busi: {}
 }

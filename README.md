@@ -58,6 +58,9 @@ bun run generate-api && bun run generate-modules && bun run generate-configSchem
 生成config json schema。执行此脚本，将生成`config/schema.json`
 `config`目录下的配置文件，可绑定该json schema以获得自动补全提示。详情见[配置文件](#配置文件)
 
+### `debug`
+在idea中启动断点调试
+
 ### `dev`
 启动开发服务器
 
