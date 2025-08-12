@@ -10,9 +10,6 @@ export interface IAppConfig {
   }
   log: ILogConfig
   eureka?: IEurekaConfig
-  /**
-   * eg.`mysql://root:password@localhost:3306/mydb`
-   */
   db?: IDbConfig
   // busi: {}
 }
