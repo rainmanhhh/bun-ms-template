@@ -28,9 +28,20 @@
 ```bash
 bun create rainmanhhh/bun-ms-template my-project
 cd my-project
-bun i && bun run generate-api && bun run generate-modules && bun run generate-db && bun run generate-configSchema
 ```
-**注意**：创建项目时，必须先按以上顺序执行一次generate系列脚本，否则编译会报错
+#### 安装依赖
+```bash
+bun i
+```
+#### 生成数据库代码（注意先修改config文件中的数据库连接配置），若无需访问数据库，可忽略此步骤
+```bash
+bun run generate-db
+```
+#### 生成接口代码、模块和app配置类型文件
+```bash
+bun run generate-api && bun run generate-modules && bun run generate-configSchema
+```
+**注意**：创建项目时，先按以上顺序执行一次generate系列脚本，否则编译会报错
 ---
 
 ## 项目脚本

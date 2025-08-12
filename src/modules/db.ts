@@ -4,16 +4,16 @@ import { appConfig } from '~/config/appConfig.ts'
 import { logger } from '~/logger.ts'
 import * as schema from '../../drizzle/schema.ts'
 
-const dbUrl = appConfig.dbUrl
+const dbConfig = appConfig.db
 
 const poolConnection = mysql.createPool({
-  uri: dbUrl ?? '',
+  uri: dbConfig?.url ?? '',
 })
 export const db = drizzle(
   poolConnection,
   {
     schema,
-    mode: 'planetscale'
+    mode: dbConfig?.mode ?? 'default'
   }
 )
-logger.info('drizzle instance created. dbUrl: %s', dbUrl)
+logger.info('drizzle instance created.')
