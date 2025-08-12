@@ -26,7 +26,8 @@ dist-ssr
 openapi/**/out/
 
 config/schema.json
-/drizzle/
+/drizzle/meta/
+/drizzle/*.sql
 !generated/.gitignore
 generated/
 .log-rotate.json
