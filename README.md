@@ -125,7 +125,7 @@ bun run generate-api && bun run generate-modules && bun run generate-configSchem
 
 ## 数据库支持
 - 使用drizzle-orm访问数据库，配置文件为`prebuild/drizzle.config.ts`
-- 模板中默认加入了mysql2作为驱动，若使用其他数据库可进行替换（注意同时修改drizzle.config.ts中的`dialect`）
+- 模板中默认加入了`mysql2`作为驱动，若使用其他数据库可进行替换（注意同时修改`drizzle.config.ts`中的`dialect`和`src/modules/db.ts`中的初始化代码）
 - 连接配置在`appConfig.dbUrl`，执行`generate-db`会读取数据库反向生成schema（输出到`drizzle`目录下）
 
 ## 日志
