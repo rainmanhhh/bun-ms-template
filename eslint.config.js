@@ -28,6 +28,7 @@ export default antfu({
     '.vscode/',
     'README.md',
     'src/generated/',
+    'drizzle/',
   )
   return arr
 })
