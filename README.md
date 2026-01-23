@@ -19,32 +19,36 @@
 
 ---
 
-## 环境准备
+## 1.环境准备
 
-### 前置要求
+### 1.1.前置要求
 - [Bun](https://bun.sh/) v1.2.0+
 
-### 创建项目
+### 1.2.创建项目
 ```bash
 bun create rainmanhhh/bun-ms-template my-project
 cd my-project
 ```
-#### 安装依赖
+### 1.3.安装依赖
 ```bash
 bun i
 ```
-#### 生成数据库代码（注意先修改config文件中的数据库连接配置），若无需访问数据库，可忽略此步骤
+### 1.4.生成数据库代码（注意先修改config文件中的数据库连接配置），若无需访问数据库，可忽略此步骤
 ```bash
 bun run generate-db
 ```
-#### 生成接口代码、模块和app配置类型文件
+### 1.5.生成接口代码、模块和app配置类型文件
 ```bash
 bun run generate-api && bun run generate-modules && bun run generate-configSchema
 ```
 **注意**：创建项目时，先按以上顺序执行一次generate系列脚本，否则编译会报错
+
+### 1.6.修改基础配置
+编辑config/base.yml，修改项目基础配置（项目名称和http服务端口号）
+
 ---
 
-## 项目脚本
+## 2.项目脚本
 
 在 `package.json` 中定义的核心开发指令（使用`bun run <script>`执行）：
 
