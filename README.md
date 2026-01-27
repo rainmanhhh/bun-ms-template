@@ -145,4 +145,4 @@ logger.info('hello %s', 'world')
 
 ## 10.其他
 - `tsconfig.json`中，`lib`被配置为`ESNext` + `DOM`，如果要使用dom的某些接口（例如`FormData`），需添加对应的polyfill。
-- 自带`dateUtil`，`uuidUtil`，`ipUtil`以提供常用功能
+- src/util目录下自带一些工具函数，以提供常用功能
