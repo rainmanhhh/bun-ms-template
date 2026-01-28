@@ -69,7 +69,10 @@ bun run generate-api && bun run generate-modules && bun run generate-configSchem
 启动开发服务器
 
 ### `build`
-编译打包。假设部署到服务器的`/home/app/foo`目录，则上传项目的`dist`和`config`目录到`/home/app/foo`。同时还可上传`scripts`目录下的脚本用于启停服务（`bun.sh`放在`/etc/profile.d./`，`start.sh`和`end.sh`放在`/home/app/foo/`）
+编译打包。假设部署到服务器的`/home/app/foo`目录，则上传项目的`dist`和`config`目录到`/home/app/foo`。
+同时还可上传`scripts`目录下的脚本用于启停服务：
+- `bun.sh`放在`/etc/profile.d./`
+- `start.sh`和`end.sh`放在`/home/app/foo/`（`start.test.sh`和`start.prod.sh`分别用于测试和生产环境）
 
 ### `preview`
 预览打包后的app。先通过`cross-env`将`NODE_ENV`设置为`production`，然后启动`dist/index.js`进行预览
@@ -114,7 +117,8 @@ bun run generate-api && bun run generate-modules && bun run generate-configSchem
 - 自带模块（未写明order的都是用默认值0，所有的`Handler`应在`server`启动前注册）：
   - `modules/db.ts`。数据库连接池，默认使用`mysql2`驱动，连接字符串从`${appConfig.db}`获取
   - `modules/server/reqContextHandler.ts`(order:-1000) 。将`express`请求对象`req`和响应对象`res`绑定到异步上下文`reqContext`，后续的请求处理函数可访问此对象来进行获取url、请求头、设置响应头等操作
-  - `modules/server/passportHandler.ts`(order:-500)。默认的`passport`处理器demo，无实际作用。若服务需要权限认证，应自定义`Strategy`实现替换`ApiKey1Strategy`
+  - `modules/server/cookieHandler.ts`(order:-800)。cookie处理器，从请求头中解析客户端发送的cookie
+  - `modules/server/passportHandler.ts`(order:-500)。默认的`passport`处理器，取请求头中的Authorization（也支持cookie），解析jwt生成JwtUser对象。若需要自定义权限认证，应自定义`Strategy`实现替换`JwtStrategy`（注意保持openapi中的security和代码中的Strategy.name一致）
   - `modules/server/bodyHandler.ts`(order:-200)。默认的请求报文体处理器，支持form和json格式
   - `modules/server/controller/`目录下的文件。所有的`controller`应将自己的实例添加到`routes`中，以便后续`routes`注册路由时引用
   - `modules/server/eurekaClient.ts`。eureka客户端。自行处理actuator端点，不与`routes`交互

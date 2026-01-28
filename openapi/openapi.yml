@@ -47,11 +47,11 @@ components:
         - value
         - create_time
   securitySchemes:
-    apiKey1:
-      name: X-API-KEY
+    jwt:
+      name: Authorization
       type: apiKey
       in: header
 tags:
   - name: FooBar
 security:
-  - apiKey1: []
+  - jwt: []
