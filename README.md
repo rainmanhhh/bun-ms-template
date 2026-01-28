@@ -107,18 +107,20 @@ bun run generate-api && bun run generate-modules && bun run generate-configSchem
   routes.fooBar = new FooBarApiImpl()
   ```
 
-## 5.模块加载
+## 5.模块
 - 每次执行[generate-modules](#generate-modules)时，自动读取`src/modules`目录（包括子目录），该路径下的每个文件会被视为一个模块，完整的模块名由目录和文件名拼接构成，例如`src/modules/controller/user/index.ts`的模块名为`controller_user_index`
 - 最终所有模块的引用会被合并生成为`src/generated/modules.ts`文件，app入口`src/index.ts`根据此文件加载模块
 - 模块文件的默认导出对象（default export）如果是函数，则会在自动加载时被执行（若函数为异步，下一个模块会在异步执行完毕后再开始加载），可额外导出一个数字常量`order`来控制此函数的执行顺序（未指定则视为order=0）
-- 自带模块：
-  - `modules/server/reqContextHandler.ts`(order=-1000) 。将`express`请求对象`req`和响应对象`res`绑定到异步上下文`reqContext`，后续的请求处理函数可访问此对象来进行获取url、请求头、设置响应头等操作
-  - `modules/server/passportHandler.ts`(order=-500)。默认的passport处理器(demo)，用于处理openapi示例中定义的全局安全令牌apiKey1（从http头获取X-API-KEY，总是返回成功）
-  - `modules/server/bodyHandler.ts`(order=-200)。默认的请求报文体处理器，支持form和json格式
-  - `modules/server/routes.ts`(order=500)。`routes`一次性为`server`批量注册路由
-  - `modules/server/errorHandler.ts`(order=999)。web服务启动前注册错误处理器
-  - `modules/server/server.ts`(order=1000)。启动web服务
-  - `modules/server/`目录下的其他文件(不指定`order`，相当于全部为0)。所有的`controller`在`routes`注册路由前先将自己添加到`routes`中（`eurekaClient`自带actuator端点，故也属于`controller`角色）
+- 自带模块（未写明order的都是用默认值0，所有的`Handler`应在`server`启动前注册）：
+  - `modules/db.ts`。数据库连接池，默认使用`mysql2`驱动，连接字符串从`${appConfig.db}`获取
+  - `modules/server/reqContextHandler.ts`(order:-1000) 。将`express`请求对象`req`和响应对象`res`绑定到异步上下文`reqContext`，后续的请求处理函数可访问此对象来进行获取url、请求头、设置响应头等操作
+  - `modules/server/passportHandler.ts`(order:-500)。默认的`passport`处理器demo，无实际作用。若服务需要权限认证，应自定义`Strategy`实现替换`ApiKey1Strategy`
+  - `modules/server/bodyHandler.ts`(order:-200)。默认的请求报文体处理器，支持form和json格式
+  - `modules/server/controller/`目录下的文件。所有的`controller`应将自己的实例添加到`routes`中，以便后续`routes`注册路由时引用
+  - `modules/server/eurekaClient.ts`。eureka客户端。自行处理actuator端点，不与`routes`交互
+  - `modules/server/routes.ts`(order:500)。`routes`一次性为`server`批量注册路由（引用前面定义的`controller`实例）
+  - `modules/server/errorHandler.ts`(order:999)。web错误处理器。打印日志并拼装错误响应报文
+  - `modules/server/server.ts`(order:1000)。启动web服务
 
 **注意**：`server`的底层实现为`express`，要自定义中间件，可参照`reqContextHandler`或`errorHandler`
 
