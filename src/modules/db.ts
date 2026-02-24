@@ -3,6 +3,7 @@ import mysql from 'mysql2/promise'
 import { appConfig } from '~/config/appConfig.ts'
 import { logger } from '~/logger.ts'
 import * as schema from '../../drizzle/schema.ts'
+import * as relations from '../../drizzle/relations.ts'
 
 const dbConfig = appConfig.db
 
@@ -12,7 +13,10 @@ const poolConnection = mysql.createPool({
 export const db = drizzle(
   poolConnection,
   {
-    schema,
+    schema: {
+      ...schema,
+      ...relations,
+    },
     mode: dbConfig?.mode ?? 'default'
   }
 )
