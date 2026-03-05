@@ -1,0 +1,6 @@
+import {Configuration, withConfiguration} from '~/client/foo'
+import {clientConfig} from '~/client/util/clientConfig.ts'
+
+export const fooClient = withConfiguration(
+  new Configuration(clientConfig('FOO'))
+)

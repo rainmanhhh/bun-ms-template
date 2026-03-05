@@ -13,9 +13,10 @@
 5. [模块加载](#模块加载)
 6. [eureka支持](#eureka支持)
 7. [数据库支持](#数据库支持)
-8. [日志](#日志)
-9. [测试](#测试)
-10. [其他](#其他)
+8. [访问其他微服务接口](#访问其他微服务接口)
+9. [日志](#日志)
+10. [测试](#测试)
+11. [其他](#其他)
 
 ---
 
@@ -138,7 +139,35 @@ bun run generate-api && bun run generate-modules && bun run generate-configSchem
 - 模板中默认加入了`mysql2`作为驱动，若使用其他数据库可进行替换（注意同时修改`drizzle.config.ts`中的`dialect`和`src/modules/db.ts`中的初始化代码）
 - 连接配置在`appConfig.dbUrl`，执行`generate-db`会读取数据库反向生成schema（输出到`drizzle`目录下）
 
-## 8.日志
+## 访问其他微服务接口
+- 通过[eureka-gateway](https://github.com/rainmanhhh/eureka-gateway)网关调用其他微服务
+- 配置ServiceApiKey（sak）作为密钥，调用其他微服务时，http头会自动带上sak（参考`config/development.yml`）
+- 每个微服务通过`openapi-generator-plus`生成客户端代码，供其他微服务调用（当前模板项目适配`@openapi-generator-plus/typescript-fetch-client-generator2`），以下为脚本和配置文件例子
+genapi.bat:
+```bat
+@echo off
+chcp 65001 >nul
+if "%1"=="" (echo 用法：genapi 目录名 & exit/b)
+pushd "%~dp0/%1" && rd /s /q out & openapi-generator-plus generate -c plus.yml & popd
+```
+plus.yml:
+```yml
+inputPath: ../openapi.yaml
+outputPath: ./out/
+generator: '@openapi-generator-plus/typescript-fetch-client-generator2'
+customTemplates: ./templates
+```
+- 按以上配置，客户端代码会输出到out目录下，将out目录复制到本项目的src/client/下，并改名（例如src/client/foo）。创建客户端实例的代码参考`src/client/fooClient.ts.txt`
+- 调用接口例子：
+```ts
+const testRes = await callApi(
+  'FooApi.test',
+  () => fooClient.FooApi.test('bar')
+)
+console.info('testRes.body: ', testRes)
+```
+
+## 9.日志
 - `src/logger.ts`文件导出了一个`logger`对象，底层实现为`winston`，所有日志均使用该对象打印。
 - 默认的配置为：`development`环境，日志输出到控制台；`production`环境，日志输出到文件，随文件大小和日期滚动（单个日志文件最大128m，最多保留30天），且自动创建一个`current.log`软链接指向最新的日志文件
 - **注意**：`winston`输出变量与`console`不同，即使只有一个变量，也要显式定义占位符，例如
@@ -146,9 +175,9 @@ bun run generate-api && bun run generate-modules && bun run generate-configSchem
 logger.info('hello %s', 'world')
 ```
 
-## 9.测试
+## 10.测试
 测试文件命名格式为`*.test.ts`，执行[test](#test)即可运行所有测试用例
 
-## 10.其他
+## 11.其他
 - `tsconfig.json`中，`lib`被配置为`ESNext` + `DOM`，如果要使用dom的某些接口（例如`FormData`），需添加对应的polyfill。
 - src/util目录下自带一些工具函数，以提供常用功能

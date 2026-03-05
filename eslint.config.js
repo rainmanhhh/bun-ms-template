@@ -29,6 +29,7 @@ export default antfu({
     'README.md',
     'src/generated/',
     'drizzle/',
+    'src/client/',
   )
   return arr
 })
