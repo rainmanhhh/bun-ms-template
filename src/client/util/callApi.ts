@@ -1,9 +1,14 @@
-// 1. 复用生成代码的通用响应类型（无需改动）
 type ApiResponse<T = unknown> =
   | {status: number; contentType: string; body: T}
   | {status: 'undocumented'; contentType?: string; response: Response}
   | {status: 'error'; error: unknown}
 
+/**
+ * 调用其他微服务接口
+ * - 若http返回码为2xx，则正常返回解析后的响应报文，否则抛出错误
+ * @param apiName 发生错误时用于显示接口名称，一般可用`XXXApi.xxxMethod`
+ * @param apiCallback 实际调用api的动作（包括参数），例如`() => fooApi.barMethod(params)`
+ */
 export async function callApi<T>(apiName: string, apiCallback: () => Promise<ApiResponse<T>>): Promise<T> {
   const apiRes = await apiCallback()
   if (typeof apiRes.status === 'number' && apiRes.status >= 200 && apiRes.status < 400) {
