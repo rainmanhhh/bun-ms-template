@@ -54,7 +54,9 @@ bun run generate-api && bun run generate-modules && bun run generate-configSchem
 在 `package.json` 中定义的核心开发指令（使用`bun run <script>`执行）：
 
 ### `generate-api`
-生成api接口代码。每次修改openapi schema后，执行此脚本生成typescript接口（输出路径为`src/generated/server`）
+生成服务端api接口代码。每次修改openapi schema后，执行此脚本生成typescript接口
+- 功能由`openapi-generator-plus`实现，当前模板为`@openapi-generator-plus/typescript-express-passport-server-generator`
+- 代码输出路径为`openapi/server/out/`，生成完毕后会复制其内容到`src/generated/server/`下
 
 ### `generate-modules`
 解析模块文件。扫描`src/modules`目录下的文件，生成`src/generated/modules.ts`。详情见[模块加载](#模块加载)
@@ -142,27 +144,16 @@ bun run generate-api && bun run generate-modules && bun run generate-configSchem
 ## 访问其他微服务接口
 - 通过[eureka-gateway](https://github.com/rainmanhhh/eureka-gateway)网关调用其他微服务
 - 配置ServiceApiKey（sak）作为密钥，调用其他微服务时，http头会自动带上sak（参考`config/development.yml`）
-- 每个微服务通过`openapi-generator-plus`生成客户端代码，供其他微服务调用（当前模板项目适配`@openapi-generator-plus/typescript-fetch-client-generator2`），以下为脚本和配置文件例子
-genapi.bat:
-```bat
-@echo off
-chcp 65001 >nul
-if "%1"=="" (echo 用法：genapi 目录名 & exit/b)
-pushd "%~dp0/%1" && rd /s /q out & openapi-generator-plus generate -c plus.yml & popd
-```
-plus.yml:
-```yml
-inputPath: ../openapi.yaml
-outputPath: ./out/
-generator: '@openapi-generator-plus/typescript-fetch-client-generator2'
-customTemplates: ./templates
-```
-- 按以上配置，客户端代码会输出到out目录下，将out目录复制到本项目的src/client/下，并改名（例如src/client/foo）。创建客户端实例的代码参考`src/client/fooClient.ts.txt`
-- 调用接口例子：
+- 每个微服务通过`openapi-generator-plus`生成客户端代码，供其他微服务调用。当前`package.json`中已有`generate-client`脚本用于生成客户端代码，实际执行内容见`openapi/genapi.cjs`和`openapi/client/plus.yml`
+- 为目标项目生成客户端代码后（若与本项目同构，会输出到`openapi/client/out`），将它复制到本项目的`src/client/`下，并改名（例如`src/client/foo`）。
+- 参考`src/client/fooClient.ts.txt`创建客户端实例，然后按以下方式调用：
+
 ```ts
+import {callApi} from '~/client/util/callApi'
+import {fooClient} from '~/client/fooClient'
 const testRes = await callApi(
-  'FooApi.test',
-  () => fooClient.FooApi.test('bar')
+        'FooApi.test',
+        () => fooClient.FooApi.test('bar')
 )
 console.info('testRes.body: ', testRes)
 ```
