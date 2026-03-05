@@ -1,10 +1,11 @@
 {
-  "name": "bun-server",
+  "name": "shift",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "generate-api": "bunx --bun rimraf ./src/generated/server && bunx --bun openapi-generator-plus -c ./openapi/plus.yml",
+    "generate-api": "bunx --bun rimraf src/generated/server && bun openapi/genapi.cjs server && bunx --bun cpy openapi/server/out/ src/generated/server",
+    "generate-client": "bun openapi/genapi.cjs client",
     "generate-modules": "bun --bun prebuild/parseModules.ts",
     "generate-configSchema": "bunx --bun typescript-json-schema tsconfig.json -i src/config/IAppConfig.d.ts -o config/schema.json IAppConfig",
     "generate-db": "bunx --bun drizzle-kit pull --config=./prebuild/drizzle.config.ts",
@@ -35,6 +36,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^4.11.0",
     "@openapi-generator-plus/typescript-express-passport-server-generator": "^2.13.0",
+    "@openapi-generator-plus/typescript-fetch-client-generator2": "^1.5.0",
     "@types/bun": "^1.2.8",
     "@types/cookie-parser": "^1.4.10",
     "@types/eureka-js-client": "^4.5.9",
@@ -43,6 +45,7 @@
     "@types/multer": "^1.4.13",
     "@types/passport": "^1.0.17",
     "ajv": "^8.17.1",
+    "cpy-cli": "^7.0.0",
     "cross-env": "^7.0.3",
     "drizzle-kit": "^0.31.4",
     "eslint": "^9.24.0",
@@ -50,6 +53,7 @@
     "glob": "^11.0.1",
     "openapi-generator-plus": "^2.20.0",
     "rimraf": "^6.0.1",
+    "shelljs": "^0.10.0",
     "typescript": "~5.7.2",
     "typescript-json-schema": "^0.65.1"
   }

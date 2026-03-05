@@ -1,0 +1,4 @@
+inputPath: ../openapi.yml
+outputPath: ./out/
+generator: '@openapi-generator-plus/typescript-fetch-client-generator2'
+customTemplates: ./templates
