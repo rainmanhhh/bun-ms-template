@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "generate-api": "bunx --bun rimraf src/generated/server && bun openapi/genapi.cjs server && bunx --bun cpy openapi/server/out/ src/generated/server",
+    "generate-api": "bunx --bun rimraf src/generated/server && bun openapi/genapi.cjs server && bunx --bun cpy 'openapi/server/out/**' src/generated/server",
     "generate-client": "bun openapi/genapi.cjs client",
     "generate-modules": "bun --bun prebuild/parseModules.ts",
     "generate-configSchema": "bunx --bun typescript-json-schema tsconfig.json -i src/config/IAppConfig.d.ts -o config/schema.json IAppConfig",
