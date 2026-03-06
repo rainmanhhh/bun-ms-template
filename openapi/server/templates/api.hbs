@@ -112,7 +112,7 @@ export default function(app: Express, impl: t.{{className name}}Api) {
 						res.status({{code}})
 						{{#if headers}}
 						{{#each headers}}
-						res.header({{{stringLiteral serializedName}}}, `${response.headers[{{{stringLiteral name}}}]}`)
+						res.header({{{stringLiteral serializedName}}}, `${response.headers?.[{{{stringLiteral name}}}]}`)
 						{{/each}}
 						{{/if}}
 						{{#if defaultContent}}
