@@ -2,8 +2,8 @@ import { drizzle } from 'drizzle-orm/mysql2'
 import mysql from 'mysql2/promise'
 import { appConfig } from '~/config/appConfig.ts'
 import { logger } from '~/logger.ts'
-import * as schema from '../../drizzle/schema.ts'
 import * as relations from '../../drizzle/relations.ts'
+import * as schema from '../../drizzle/schema.ts'
 
 const dbConfig = appConfig.db
 
