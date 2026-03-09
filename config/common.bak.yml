@@ -1,0 +1,11 @@
+$schema: ./schema.json
+#eureka:
+#  host: localhost
+#  subnet: 192.168.1.0/24
+#db:
+#  url: mysql://user?:password?@127.0.0.1:3306/test?connectTimeout=30000
+#gateway: http://192.168.1.1:8888/
+#sak:
+#  value: '123456789012345678901234567890ab'
+#jwt:
+#  secretKey: '123456789012345678901234567890ab'
