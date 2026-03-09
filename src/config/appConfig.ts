@@ -1,5 +1,6 @@
 import type { IAppConfig } from './IAppConfig'
 import * as fs from 'node:fs'
+import lodash from 'lodash'
 import yaml from 'yaml'
 
 const configFiles: string[] = []
@@ -19,7 +20,7 @@ function loadConfig() {
   const commonConfig = readConfigFile('./config/common.yml')
   const env = import.meta.env.NODE_ENV || 'development'
   const envConfig = readConfigFile(`./config/${env}.yml`)
-  return Object.assign(baseConfig, commonConfig, envConfig, { env, configFiles })
+  return lodash.merge({}, baseConfig, commonConfig, envConfig, { env, configFiles })
 }
 
 export const appConfig = loadConfig()

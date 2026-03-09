@@ -1,1 +1,3 @@
 $schema: ./schema.json
+#db:
+#  database: demo

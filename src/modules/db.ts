@@ -8,7 +8,7 @@ import * as schema from '../../drizzle/schema.ts'
 const dbConfig = appConfig.db
 
 const poolConnection = mysql.createPool({
-  uri: dbConfig?.url ?? '',
+  ...dbConfig
 })
 export const db = drizzle(
   poolConnection,
@@ -20,7 +20,7 @@ export const db = drizzle(
     mode: dbConfig?.mode ?? 'default'
   }
 )
-if (dbConfig?.url)
+if (dbConfig)
   logger.info('drizzle instance created.')
 else
-  logger.info('db url not set. drizzle instance unavailable')
+  logger.info('appConfig.db not set. drizzle instance unavailable')
