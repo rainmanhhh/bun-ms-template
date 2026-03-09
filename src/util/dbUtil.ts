@@ -23,7 +23,7 @@ export const dbUtil = {
    * return {
    *   status: 200,
    *   headers: {
-   *     xTotalCount: total
+   *     xTotalCount: total.toString()
    *   },
    *   body: list
    * }
