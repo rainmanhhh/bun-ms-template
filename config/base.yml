@@ -1,4 +1,5 @@
 $schema: ./schema.json
 name: demo
+desc: demo service
 server:
   port: 5000
