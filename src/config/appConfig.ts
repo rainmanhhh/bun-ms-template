@@ -16,9 +16,10 @@ function readConfigFile(filePath: string) {
 
 function loadConfig() {
   const baseConfig = readConfigFile('./config/base.yml')
+  const commonConfig = readConfigFile('./config/common.yml')
   const env = import.meta.env.NODE_ENV || 'development'
   const envConfig = readConfigFile(`./config/${env}.yml`)
-  return Object.assign(baseConfig, envConfig, { env, configFiles })
+  return Object.assign(baseConfig, commonConfig, envConfig, { env, configFiles })
 }
 
 export const appConfig = loadConfig()

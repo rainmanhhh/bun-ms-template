@@ -92,7 +92,7 @@ bun run generate-api && bun run generate-modules && bun run generate-configSchem
 ## 3.配置文件
 - `src/config/appConfig.ts`用于加载配置文件并导出一个`appConfig`对象
 - 配置项类型定义在`src/config/IAppConfig.d.ts`中，每次修改此文件后，应重新执行[generate-configSchema](#generate-configSchema)，生成新的`config/schema.json`
-- 配置文件为yml格式，包括一个公共的基础配置文件（名为`base.yml`）和一个与运行环境相关的配置文件（名为`${NODE_ENV}.yml`，例如`development.yml` `test.yml` `production.yml`）
+- 配置文件为yml格式，包括一个基础配置文件（`base.yml`，一般包括项目中较为固定的内容，比如项目名）、一个公共配置文件（`common.yml`，一般包括多个微服务共享的配置，例如网关、数据库地址等，可使用软链接在多个服务中共享）和一个与运行环境相关的配置文件（名为`${NODE_ENV}.yml`，例如`development.yml` `test.yml` `production.yml`，一般包括与环境强相关的配置，例如业务密钥）
 - 配置文件的第一行加上`$schema: ./schema.json`，可绑定json schema，实现自动补全
 - 若未指定`NODE_ENV`，默认为`development`。编译打包后，运行时需在命令中指定`NODE_ENV`为`production`（参考[preview](#preview)，以及前面提到的`start.sh`）
 - 代码中引用环境变量时，应使用`import.meta.env.XXX`，例如`import.meta.env.NODE_ENV`
@@ -152,8 +152,8 @@ bun run generate-api && bun run generate-modules && bun run generate-configSchem
 import {callApi} from '~/client/util/callApi'
 import {fooClient} from '~/client/fooClient'
 const testRes = await callApi(
-        'FooApi.test',
-        () => fooClient.FooApi.test('bar')
+  'FooApi.test',
+  () => fooClient.FooApi.test('bar')
 )
 console.info('testRes.body: ', testRes)
 ```
