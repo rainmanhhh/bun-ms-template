@@ -17,7 +17,8 @@ export const db = drizzle(
       ...schema,
       ...relations,
     },
-    mode: dbConfig?.mode ?? 'default'
+    mode: dbConfig?.mode ?? 'default',
+    logger: logger.isDebugEnabled(),
   }
 )
 if (dbConfig)
