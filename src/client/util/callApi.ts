@@ -7,6 +7,7 @@ interface SuccessResponse<Body, Headers> {
 
 type ApiResponse<Success extends SuccessResponse<any, any>> =
   | Success
+  | {status: 'unauthorized'; response: Response}
   | {status: 'undocumented'; contentType?: string; response: Response}
   | {status: 'error'; error: unknown}
 
