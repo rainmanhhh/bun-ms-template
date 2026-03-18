@@ -7,9 +7,9 @@ export function clientConfig(serviceName: string) {
   return {
     baseUri: appConfig.gateway + serviceName,
     fetch: ((url, init = {}) => {
-      init.headers = init.headers || {}
+      init.headers = new Headers(init.headers)
       const sak = genServiceApiKey()
-      init.headers[sak.name] = sak.value
+      init.headers.set(sak.name, sak.value)
       return fetch(url, init)
     }) satisfies FetchAPI
   }
