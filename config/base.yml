@@ -3,3 +3,5 @@ name: demo
 desc: demo service
 server:
   port: 5000
+#db:
+#  database: demo

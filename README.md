@@ -93,9 +93,11 @@ bun run generate-api && bun run generate-modules && bun run generate-configSchem
 - `src/config/appConfig.ts`用于加载配置文件并导出一个`appConfig`对象
 - 配置项类型定义在`src/config/IAppConfig.d.ts`中，每次修改此文件后，应重新执行[generate-configSchema](#generate-configSchema)，生成新的`config/schema.json`
 - 配置文件为yml格式，包括一个基础配置文件（`base.yml`，一般包括项目中较为固定的内容，比如项目名）、一个公共配置文件（`common.yml`，一般包括多个微服务共享的配置，例如网关、数据库地址等，可使用软链接在多个服务中共享）和一个与运行环境相关的配置文件（名为`${NODE_ENV}.yml`，例如`development.yml` `test.yml` `production.yml`，一般包括与环境强相关的配置，例如业务密钥）
+- 仅存在于服务器（测试/生产）的`common.yml`和`${NODE_ENV}.yml`示例，见`config.example`目录
 - 配置文件的第一行加上`$schema: ./schema.json`，可绑定json schema，实现自动补全
 - 若未指定`NODE_ENV`，默认为`development`。编译打包后，运行时需在命令中指定`NODE_ENV`为`production`（参考[preview](#preview)，以及前面提到的`start.sh`）
 - 代码中引用环境变量时，应使用`import.meta.env.XXX`，例如`import.meta.env.NODE_ENV`
+- 对于数据库配置的说明：多个服务共享同一个数据库，但schema不同的情况，可以将地址、端口、用户名、密码、超时时间、字符集等参数都配置到`common.yml`，schema（`db.database`）配置到`base.yml`，这样`${NODE_ENV}.yml`中就不用配置任何数据库参数。注意：由于开发环境不存在`common.yml`，`development.yml`中需要配置全部的数据库参数
 
 ## 4.编写业务代码
 按以下步骤进行开发：
