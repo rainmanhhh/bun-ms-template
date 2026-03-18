@@ -10,6 +10,8 @@ interface RunnableModule {
 }
 async function main() {
   logger.info('env: %s, loadedConfigFiles: %s', appConfig.env, JSON.stringify(appConfig.configFiles))
+  if (logger.isDebugEnabled())
+    logger.debug('appConfig: %o', appConfig)
   const moduleEntries = Object.entries(modules as Record<string, any>)
   const runnableModules: RunnableModule[] = []
   for (const [moduleName, module] of moduleEntries) {
