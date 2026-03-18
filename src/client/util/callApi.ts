@@ -1,5 +1,12 @@
-type ApiResponse<T = unknown> =
-  | {status: number; contentType: string; body: T}
+interface SuccessResponse<Body, Headers> {
+  status: number;
+  contentType?: string;
+  body?: Body,
+  headers?: Headers
+}
+
+type ApiResponse<Success extends SuccessResponse<any, any>> =
+  | Success
   | {status: 'undocumented'; contentType?: string; response: Response}
   | {status: 'error'; error: unknown}
 
@@ -9,10 +16,12 @@ type ApiResponse<T = unknown> =
  * @param apiName 发生错误时用于显示接口名称，一般可用`XXXApi.xxxMethod`
  * @param apiCallback 实际调用api的动作（包括参数），例如`() => fooApi.barMethod(params)`
  */
-export async function callApi<T>(apiName: string, apiCallback: () => Promise<ApiResponse<T>>): Promise<T> {
+export async function callApi<Success extends SuccessResponse<any, any>>(
+  apiName: string, apiCallback: () => Promise<ApiResponse<Success>>
+): Promise<Success> {
   const apiRes = await apiCallback()
   if (typeof apiRes.status === 'number' && apiRes.status >= 200 && apiRes.status < 400) {
-    return apiRes.body
+    return apiRes
   } else if (apiRes.status === 'undocumented') {
     const resBody = await apiRes.response.text()
     throw new Error(`callApi [${apiName}] failed! status:${apiRes.response.status}, body:${resBody}`, {cause: apiRes.response})

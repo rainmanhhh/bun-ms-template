@@ -155,7 +155,7 @@ const testRes = await callApi(
   'FooApi.test',
   () => fooClient.FooApi.test('bar')
 )
-console.info('testRes.body: ', testRes)
+console.info('testRes: body=%o, headers=%o', testRes.body, testRes.headers)
 ```
 
 ## 9.日志
