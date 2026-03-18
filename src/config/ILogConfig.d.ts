@@ -1,8 +1,14 @@
+export type LogLevel = 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly'
+
 export interface ILogConfig {
   /**
-   * log level. default: `debug` if env is `development` or `test`; `info` if env is `production`
+   * global default log level. default: `debug` if env is `development` or `test`; `info` if env is `production`
    */
-  level: 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly'
+  level: LogLevel
+  /**
+   * module specific log levels
+   */
+  levels?: Record<string, LogLevel>
   /**
    * output to console. default set to `true` if env is `development` or `test`
    */
