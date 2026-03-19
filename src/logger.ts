@@ -1,7 +1,7 @@
 import type { Logger } from 'winston'
 import type * as Transport from 'winston-transport'
+import * as fs from 'node:fs'
 import { createLogger, format, transports } from 'winston'
-
 import { appConfig } from './config/appConfig'
 import 'winston-daily-rotate-file'
 
@@ -24,7 +24,11 @@ if (appConfig.env === 'production') {
   config.level = config.level ?? 'info'
 }
 
-export const logger = createModuleLogger('')
+// 未开启文件日志的，兜底开启控制台日志
+if (!config.file)
+  config.console = true
+
+const transportArr = createTransports()
 
 const loggerCache = new Map<string, Logger>()
 export function getLogger(namespace: string): Logger {
@@ -32,37 +36,43 @@ export function getLogger(namespace: string): Logger {
     loggerCache.set(namespace, createModuleLogger(namespace))
   return loggerCache.get(namespace)!
 }
-
 /**
  * 日志工厂函数
  * @param namespace
  */
 function createModuleLogger(namespace: string): Logger {
   // 获取模块专属级别（无配置则使用全局级别）
-  const level = config.levels?.[namespace] || config.level
 
+  const level = config.levels?.[namespace] || config.level
   // 创建带命名空间的格式化器（注入模块名）
+
   const namespaceFormat = format((info) => {
     info.namespace = namespace
     return info
   })()
-
   // 创建模块专属 logger
   return createLogger({
     level,
     format: format.combine(namespaceFormat), // 注入模块名
-    transports: createTransports(level)
+    transports: transportArr
   })
 }
 
-function createTransports(level: string): Transport[] {
+function createSymlink(logFile: string, symlink: string) {
+  // 删除旧 symlink（如果存在）
+  if (fs.existsSync(symlink))
+    fs.unlinkSync(symlink)
+  // 创建指向**最新**文件的 symlink
+  fs.symlinkSync(logFile, symlink)
+}
+
+function createTransports(): Transport[] {
   const transportArr: Transport[] = []
 
   // 控制台 transport
   if (config.console) {
     transportArr.push(
       new transports.Console({
-        level,
         format: format.combine(
           format.timestamp({ format: 'HH:mm:ss' }),
           format.colorize(),
@@ -77,26 +87,35 @@ function createTransports(level: string): Transport[] {
 
   // 按日期轮转的文件 transport
   if (config.file) {
-    transportArr.push(
-      new transports.DailyRotateFile({
-        level,
-        filename: `logs/${config.file.name || appConfig.name}-%DATE%.${config.file.suffix || 'log'}`,
-        datePattern: 'YYYY-MM-DD',
-        zippedArchive: true,
-        maxSize: config.file.maxSize || '128m',
-        maxFiles: config.file.maxFiles || '30d',
-        auditFile: '.log-rotate.json',
-        createSymlink: true,
-        format: format.combine(
-          format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-          format.align(),
-          format.splat(),
-          format.errors({ stack: true }),
-          logFormat
-        )
+    const dir = config.file.dir || 'logs'
+    const fileTransport = new transports.DailyRotateFile({
+      filename: `${dir}/${config.file.name ?? appConfig.name}.%DATE%.${config.file.suffix ?? 'log'}`,
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: true,
+      maxSize: config.file.maxSize || '128m',
+      maxFiles: config.file.maxFiles || '30d',
+      auditFile: '.log-rotate.json',
+      format: format.combine(
+        format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+        format.align(),
+        format.splat(),
+        format.errors({ stack: true }),
+        logFormat
+      )
+    })
+    const symlink = config.file.symlink ?? 'current.log'
+    if (symlink) {
+      fileTransport.on('rotate', (_oldFilename: string, newFilename: string) => {
+        createSymlink(newFilename, symlink)
       })
-    )
+      fileTransport.on('new', filename => {
+        createSymlink(filename, symlink)
+      })
+    }
+    transportArr.push(fileTransport)
   }
 
   return transportArr
 }
+
+export const logger = getLogger('')

@@ -18,6 +18,10 @@ export interface ILogConfig {
    */
   file?: {
     /**
+     * log file directory. default: `logs`
+     */
+    dir?: string
+    /**
      * log file name. default: ${appConfig.name}
      */
     name?: string
@@ -33,5 +37,9 @@ export interface ILogConfig {
      * max single file size. default: `128m`
      */
     maxSize?: string
+    /**
+     * if not empty, create symlink to current log file. default: `current.log`
+     */
+    symlink?: string
   }
 }
