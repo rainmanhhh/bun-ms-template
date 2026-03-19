@@ -84,7 +84,7 @@ function createTransports(level: string): Transport[] {
         datePattern: 'YYYY-MM-DD',
         zippedArchive: true,
         maxSize: config.file.maxSize || '128m',
-        maxFiles: config.file.maxSize || '30d', // 注：原代码此处笔误，应为 config.file.maxFiles
+        maxFiles: config.file.maxFiles || '30d',
         auditFile: '.log-rotate.json',
         createSymlink: true,
         format: format.combine(
