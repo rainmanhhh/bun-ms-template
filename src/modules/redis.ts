@@ -67,14 +67,18 @@ async function createRedisClient(conf: NonNullable<typeof redisConfig>) {
   return client
 }
 
-export const redis = redisConfig
+const redisPromise = redisConfig
   ? createRedisClient(redisConfig)
   : null
+let redis: Redis | undefined
 
-/**
- * 模块入口（被 loadModules 加载，仅等待初始化完成）
- */
+export function getRedis() {
+  if (!redis)
+    throw new Error('Redis client not initialized')
+  return redis
+}
+
 export default async function () {
-  if (redis)
-    await redis
+  if (redisPromise)
+    redis = await redisPromise
 }
