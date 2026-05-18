@@ -6,17 +6,17 @@
 ---
 
 ## 目录
-1. [环境准备](#环境准备)
-2. [项目脚本](#项目脚本)
-3. [配置文件](#配置文件)
-4. [编写业务代码](#编写业务代码)
-5. [模块加载](#模块加载)
-6. [eureka支持](#eureka支持)
-7. [数据库支持](#数据库支持)
-8. [访问其他微服务接口](#访问其他微服务接口)
-9. [日志](#日志)
-10. [测试](#测试)
-11. [其他](#其他)
+1. [环境准备](#1环境准备)
+2. [项目脚本](#2项目脚本)
+3. [配置文件](#3配置文件)
+4. [编写业务代码](#4编写业务代码)
+5. [模块加载](#5模块加载)
+6. [eureka支持](#6eureka支持)
+7. [数据库支持](#7数据库支持)
+8. [访问其他微服务接口](#8访问其他微服务接口)
+9. [日志](#9日志)
+10. [测试](#10测试)
+11. [其他](#11其他)
 
 ---
 
@@ -59,7 +59,7 @@ bun run generate-api && bun run generate-modules && bun run generate-configSchem
 - 代码输出路径为`openapi/server/out/`，生成完毕后会复制其内容到`src/generated/server/`下
 
 ### `generate-modules`
-解析模块文件。扫描`src/modules`目录下的文件，生成`src/generated/modules.ts`。详情见[模块加载](#模块加载)
+解析模块文件。扫描`src/modules`目录下的文件，生成`src/generated/modules.ts`。详情见[模块加载](#5模块加载)
 
 ### `generate-configSchema`
 生成config json schema。执行此脚本，将生成`config/schema.json`
@@ -115,7 +115,7 @@ bun run generate-api && bun run generate-modules && bun run generate-configSchem
   routes.fooBar = new FooBarApiImpl()
   ```
 
-## 5.模块
+## 5.模块加载
 - 每次执行[generate-modules](#generate-modules)时，自动读取`src/modules`目录（包括子目录），该路径下的每个文件会被视为一个模块，完整的模块名由目录和文件名拼接构成，例如`src/modules/controller/user/index.ts`的模块名为`controller_user_index`
 - 最终所有模块的引用会被合并生成为`src/generated/modules.ts`文件，app入口`src/index.ts`根据此文件加载模块
 - 模块文件的默认导出对象（default export）如果是函数，则会在自动加载时被执行（若函数为异步，下一个模块会在异步执行完毕后再开始加载），可额外导出一个数字常量`order`来控制此函数的执行顺序（未指定则视为order=0）
@@ -143,7 +143,7 @@ bun run generate-api && bun run generate-modules && bun run generate-configSchem
 - 模板中默认加入了`mysql2`作为驱动，若使用其他数据库可进行替换（注意同时修改`drizzle.config.ts`中的`dialect`和`src/modules/db.ts`中的初始化代码）
 - 连接配置在`appConfig.dbUrl`，执行`generate-db`会读取数据库反向生成schema（输出到`drizzle`目录下）
 
-## 访问其他微服务接口
+## 8.访问其他微服务接口
 - 通过[eureka-gateway](https://github.com/rainmanhhh/eureka-gateway)网关调用其他微服务
 - 配置ServiceApiKey（sak）作为密钥，调用其他微服务时，http头会自动带上sak（参考`config/development.yml`）
 - 每个微服务通过`openapi-generator-plus`生成客户端代码，供其他微服务调用。当前`package.json`中已有`generate-client`脚本用于生成客户端代码，实际执行内容见`openapi/genapi.cjs`和`openapi/client/plus.yml`
@@ -154,8 +154,8 @@ bun run generate-api && bun run generate-modules && bun run generate-configSchem
 import {callApi} from '~/client/util/callApi'
 import {fooClient} from '~/client/fooClient'
 const testRes = await callApi(
-  'FooApi.test',
-  () => fooClient.FooApi.test('bar')
+        'FooApi.test',
+        () => fooClient.FooApi.test('bar')
 )
 console.info('testRes: body=%o, headers=%o', testRes.body, testRes.headers)
 ```
