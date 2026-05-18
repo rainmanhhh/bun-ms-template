@@ -19,4 +19,9 @@ type IRedisConfig = Omit<RedisOptions, 'retryStrategy'> & {
    * @default '/actuator/redis'
    */
   statusCheckPath?: string
+  /**
+   * 默认的缓存过期时间，单位秒。0表示永不过期
+   * @default 0
+   */
+  expireSeconds?: number
 }
