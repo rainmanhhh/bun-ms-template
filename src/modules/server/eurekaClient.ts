@@ -1,9 +1,11 @@
 import { Eureka } from 'eureka-js-client'
 import defer from 'p-defer'
 import { appConfig } from '~/config/appConfig.ts'
-import { logger } from '~/logger.ts'
+import { getLogger } from '~/logger.ts'
 import { ipUtil } from '~/util/ipUtil.ts'
 import { server } from './server.ts'
+
+const logger = getLogger('eurekaClient')
 
 const eureka = appConfig.eureka
 

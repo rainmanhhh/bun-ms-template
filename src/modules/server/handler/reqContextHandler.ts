@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express'
 import { AsyncLocalStorage } from 'node:async_hooks'
-import { server } from './server.ts'
+import { server } from '../server.ts'
 
 const asyncLocalStorage = new AsyncLocalStorage()
 

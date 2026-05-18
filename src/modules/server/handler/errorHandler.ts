@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express'
-import { logger } from '~/logger.ts'
-import { server } from './server.ts'
+import { logger } from 'src/logger.ts'
+import { server } from '../server.ts'
 
 export default function () {
   server.use((err: Error | any | null, _req: Request, res: Response, next: NextFunction) => {

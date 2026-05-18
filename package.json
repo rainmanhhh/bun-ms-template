@@ -23,6 +23,7 @@
     "eureka-js-client": "^4.5.0",
     "express": "^5.1.0",
     "formdata-polyfill": "^4.0.10",
+    "ioredis": "^5.10.1",
     "ipaddr.js": "^2.2.0",
     "jsonwebtoken": "^9.0.3",
     "lodash": "^4.17.23",

@@ -25,10 +25,11 @@ async function main() {
   }
   for (const module of runnableModules.sort((a, b) => a.order - b.order)) {
     try {
+      logger.debug('run module [%s][order:%d]', module.name, module.order)
       await module.exec()
       logger.debug('run module [%s] success', module.name)
     } catch (e) {
-      logger.error('run module [%s] failed', module.name, e)
+      logger.error('run module [%s][order:%d] failed', module.name, module.order, e)
       process.exit(1)
     }
   }

@@ -1,4 +1,5 @@
 import type { IDbConfig } from '~/config/IDbConfig'
+import type { IRedisConfig } from '~/config/IRedisConfig'
 import type { IEurekaConfig } from '~/config/IEurekaConfig'
 import type { ILogConfig } from '~/config/ILogConfig'
 import type { ISAKConfig } from '~/config/ISAKConfig'
@@ -32,6 +33,10 @@ export interface IAppConfig {
    * 数据库连接配置
    */
   db?: IDbConfig
+  /**
+   * redis缓存连接配置
+   */
+  redis?: IRedisConfig
   /**
    * 网关地址，必须以斜杠`/`结尾
    */
