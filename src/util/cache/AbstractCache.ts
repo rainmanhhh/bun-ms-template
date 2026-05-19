@@ -4,7 +4,7 @@ import { getRedis } from '~/modules/redis.ts'
 
 export const DEFAULT_EXPIRE_SECONDS = 1800
 
-export class Cache<T> {
+export abstract class AbstractCache<T> {
   /**
    * 缓存名称
    */
@@ -27,7 +27,7 @@ export class Cache<T> {
    * 构造函数
    * @param cacheName 缓存名称
    * @param loader 缓存值加载函数
-   * @param expireSeconds 缓存过期时间，单位秒。0表示永不过期。不传则使用`appConfig.redis.expireSeconds`（默认30分钟）
+   * @param expireSeconds 缓存过期时间，单位秒。0表示永不过期。不传则使用{@link appConfig.redis.expireSeconds}
    */
   protected constructor(
     cacheName: string,
@@ -43,9 +43,9 @@ export class Cache<T> {
   /**
    * 从缓存中读取原始的字符串值
    * - 若缓存中不存在该键，则调用`loader`函数加载并缓存该键的值
-   * @param key
+   * @param key 缓存键。会自动添加前缀
    */
-  async getStr(key: string | number): Promise<string | null> {
+  protected async getStr(key: string | number): Promise<string | null> {
     const fullKey = this.getFullKey(key)
     let str = await getRedis().get(fullKey)
     if (str == null) {
@@ -59,22 +59,22 @@ export class Cache<T> {
   }
 
   /**
+   * 直接向缓存中设置原始的字符串值
+   * @param key 缓存键。会自动添加前缀
+   * @param value 字符串形式的原始缓存值
+   * @param expireSeconds 过期时间（秒）。不传则使用Cache实例构造时的默认值
+   */
+  protected async setStr(key: string | number, value: string, expireSeconds?: number): Promise<void> {
+    const fullKey = this.getFullKey(key)
+    await getRedis().set(fullKey, value, 'EX', expireSeconds ?? this.expireSeconds)
+  }
+
+  /**
    * 从缓存中获取指定键的值
    * - 若缓存中不存在该键，则调用`loader`函数加载并缓存该键的值
    * @param key 缓存键。会自动添加前缀
    */
-  async get(key: string | number): Promise<T | undefined> {
-    const str = await this.getStr(key)
-    if (str)
-      return JSON.parse(str) ?? undefined
-    else
-      return undefined
-  }
-
-  async setStr(key: string | number, value: string, expireSeconds?: number): Promise<void> {
-    const fullKey = this.getFullKey(key)
-    await getRedis().set(fullKey, value, 'EX', expireSeconds ?? this.expireSeconds)
-  }
+  abstract get(key: string | number): Promise<T | undefined>
 
   /**
    * 设置缓存中键的值
@@ -82,9 +82,7 @@ export class Cache<T> {
    * @param value 缓存值
    * @param expireSeconds 过期时间（秒）。不传则使用Cache实例构造时的默认值
    */
-  async set(key: string | number, value: T, expireSeconds?: number): Promise<void> {
-    await this.setStr(key, JSON.stringify(value), expireSeconds)
-  }
+  abstract set(key: string | number, value: T, expireSeconds?: number): Promise<void>
 
   /**
    * 从缓存中删除指定键的值
@@ -94,7 +92,7 @@ export class Cache<T> {
     return getRedis().del(this.getFullKey(key))
   }
 
-  private getFullKey(key: string | number): string {
+  protected getFullKey(key: string | number): string {
     return this.cachePrefix + key.toString()
   }
 }

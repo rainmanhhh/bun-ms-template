@@ -146,16 +146,19 @@ bun run generate-api && bun run generate-modules && bun run generate-configSchem
 
 ## 8.缓存支持
 - 配置`${appConfig.redis}`参数后，可通过创建`Cache`实例来访问Redis缓存（底层实现为`ioredis`）。例子：
+
 ```ts
-import { Cache } from '~/util/cache/Cache'
-type Foo = { foo: string }
-const cache = new Cache<Foo>('testCache', async (key) => undefined, 86400)
+import {JsonCache} from '~/util/cache/JsonCache'
+
+type Foo = {foo: string}
+const cache = new JsonCache<Foo>('testCache', async (key) => undefined, 86400)
 
 async function test() {
-  await cache.set('testKey', { foo: 'bar' })
+  await cache.set('testKey', {foo: 'bar'})
   const foo = await cache.get('testKey')
   console.info('foo: ', foo)
 }
+
 test()
 ```
 
