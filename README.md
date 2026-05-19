@@ -13,10 +13,11 @@
 5. [模块加载](#5模块加载)
 6. [eureka支持](#6eureka支持)
 7. [数据库支持](#7数据库支持)
-8. [访问其他微服务接口](#8访问其他微服务接口)
-9. [日志](#9日志)
-10. [测试](#10测试)
-11. [其他](#11其他)
+8. [缓存支持](#8缓存支持)
+9. [访问其他微服务接口](#9访问其他微服务接口)
+10. [日志](#10日志)
+11. [测试](#11测试)
+12. [其他](#12其他)
 
 ---
 
@@ -143,7 +144,22 @@ bun run generate-api && bun run generate-modules && bun run generate-configSchem
 - 模板中默认加入了`mysql2`作为驱动，若使用其他数据库可进行替换（注意同时修改`drizzle.config.ts`中的`dialect`和`src/modules/db.ts`中的初始化代码）
 - 连接配置在`appConfig.dbUrl`，执行`generate-db`会读取数据库反向生成schema（输出到`drizzle`目录下）
 
-## 8.访问其他微服务接口
+## 8.缓存支持
+- 配置`${appConfig.redis}`参数后，可通过创建`Cache`实例来访问Redis缓存（底层实现为`ioredis`）。例子：
+```ts
+import { Cache } from '~/util/cache/Cache'
+type Foo = { foo: string }
+const cache = new Cache<Foo>('testCache', async (key) => undefined, 86400)
+
+async function test() {
+  await cache.set('testKey', { foo: 'bar' })
+  const foo = await cache.get('testKey')
+  console.info('foo: ', foo)
+}
+test()
+```
+
+## 9.访问其他微服务接口
 - 通过[eureka-gateway](https://github.com/rainmanhhh/eureka-gateway)网关调用其他微服务
 - 配置ServiceApiKey（sak）作为密钥，调用其他微服务时，http头会自动带上sak（参考`config/development.yml`）
 - 每个微服务通过`openapi-generator-plus`生成客户端代码，供其他微服务调用。当前`package.json`中已有`generate-client`脚本用于生成客户端代码，实际执行内容见`openapi/genapi.cjs`和`openapi/client/plus.yml`
@@ -157,10 +173,10 @@ const testRes = await callApi(
         'FooApi.test',
         () => fooClient.FooApi.test('bar')
 )
-console.info('testRes: body=%o, headers=%o', testRes.body, testRes.headers)
+console.info('testRes.body: ', testRes)
 ```
 
-## 9.日志
+## 10.日志
 - `src/logger.ts`文件导出了一个`logger`对象，底层实现为`winston`，所有日志均使用该对象打印。
 - 默认的配置为：`development`环境，日志输出到控制台；`production`环境，日志输出到文件，随文件大小和日期滚动（单个日志文件最大128m，最多保留30天），且自动创建一个`current.log`软链接指向最新的日志文件
 - **注意**：`winston`输出变量与`console`不同，即使只有一个变量，也要显式定义占位符，例如
@@ -168,9 +184,9 @@ console.info('testRes: body=%o, headers=%o', testRes.body, testRes.headers)
 logger.info('hello %s', 'world')
 ```
 
-## 10.测试
+## 11.测试
 测试文件命名格式为`*.test.ts`，执行[test](#test)即可运行所有测试用例
 
-## 11.其他
+## 12.其他
 - `tsconfig.json`中，`lib`被配置为`ESNext` + `DOM`，如果要使用dom的某些接口（例如`FormData`），需添加对应的polyfill。
 - src/util目录下自带一些工具函数，以提供常用功能

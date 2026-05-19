@@ -26,18 +26,18 @@ export class Cache<T> {
   /**
    * 构造函数
    * @param cacheName 缓存名称
-   * @param expireSeconds 缓存过期时间，单位秒。0表示永不过期。默认值为`appConfig.redis.expireSeconds`
    * @param loader 缓存值加载函数
+   * @param expireSeconds 缓存过期时间，单位秒。0表示永不过期。不传则使用`appConfig.redis.expireSeconds`（默认30分钟）
    */
   protected constructor(
     cacheName: string,
-    expireSeconds = appConfig.redis?.expireSeconds ?? DEFAULT_EXPIRE_SECONDS,
     loader: (key: string | number) => MaybePromise<T | undefined>,
+    expireSeconds = appConfig.redis?.expireSeconds ?? DEFAULT_EXPIRE_SECONDS,
   ) {
     this.cacheName = cacheName
     this.cachePrefix = `${appConfig.name}:${cacheName}:`
-    this.expireSeconds = expireSeconds
     this.loader = loader
+    this.expireSeconds = expireSeconds
   }
 
   /**
