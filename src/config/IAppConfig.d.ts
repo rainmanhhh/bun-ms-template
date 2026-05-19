@@ -1,7 +1,8 @@
+import type { IBusiConfig } from '~/config/IBusiConfig'
 import type { IDbConfig } from '~/config/IDbConfig'
-import type { IRedisConfig } from '~/config/IRedisConfig'
 import type { IEurekaConfig } from '~/config/IEurekaConfig'
 import type { ILogConfig } from '~/config/ILogConfig'
+import type { IRedisConfig } from '~/config/IRedisConfig'
 import type { ISAKConfig } from '~/config/ISAKConfig'
 import type { JwtConfig } from '~/util/jwt/JwtUtil.ts'
 
@@ -49,5 +50,8 @@ export interface IAppConfig {
    * json web token配置
    */
   jwt?: JwtConfig
-  // busi: {}
+  /**
+   * 业务配置
+   */
+  busi: IBusiConfig
 }
