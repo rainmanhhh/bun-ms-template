@@ -21,7 +21,8 @@ type IRedisConfig = Omit<RedisOptions, 'retryStrategy'> & {
   statusCheckPath?: string
   /**
    * 默认的缓存过期时间，单位秒。0表示永不过期
-   * @default 0
+   * - 若应用中有多个不同的缓存实例，可分别配置自己的过期时间
+   * @default 1800
    */
   expireSeconds?: number
 }

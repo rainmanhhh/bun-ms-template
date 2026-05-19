@@ -2,6 +2,8 @@ import type { MaybePromise } from '~/util/MaybePromise'
 import { appConfig } from '~/config/appConfig.ts'
 import { getRedis } from '~/modules/redis.ts'
 
+export const DEFAULT_EXPIRE_SECONDS = 1800
+
 export class Cache<T> {
   /**
    * 缓存名称
@@ -29,7 +31,7 @@ export class Cache<T> {
    */
   protected constructor(
     cacheName: string,
-    expireSeconds = appConfig.redis?.expireSeconds ?? 0,
+    expireSeconds = appConfig.redis?.expireSeconds ?? DEFAULT_EXPIRE_SECONDS,
     loader: (key: string | number) => MaybePromise<T | undefined>,
   ) {
     this.cacheName = cacheName
