@@ -3,7 +3,7 @@
   "configVersion": 0,
   "workspaces": {
     "": {
-      "name": "vite-bun-server",
+      "name": "bun-ms-server",
       "dependencies": {
         "cookie-parser": "^1.4.7",
         "dayjs": "^1.11.13",
