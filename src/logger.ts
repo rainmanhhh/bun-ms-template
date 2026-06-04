@@ -24,8 +24,8 @@ if (appConfig.env === 'production') {
   config.level = config.level ?? 'info'
 }
 
-// 未开启文件日志的，兜底开启控制台日志
-if (!config.file)
+// 未开启文件日志的，兜底开启控制台日志（除非明确关闭）
+if (!config.file && config.console == null)
   config.console = true
 
 const transportArr = createTransports()
